@@ -1,0 +1,455 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Tienda</title>
+<meta name="description" content="Tienda online de productos seleccionados a mano." />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@500;600;700&family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
+<style>
+  :root {
+    --accent: #ff6f61;
+    --accent-dark: #e6554a;
+    --ink: #1f2a33;
+    --ink-soft: #4a5560;
+    --bg: #fcf8f2;
+    --card: #ffffff;
+    --line: #eee3d3;
+    --gold: #d4a24e;
+    --shadow: 0 18px 40px rgba(31, 42, 51, 0.12);
+    --radius: 18px;
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  html { scroll-behavior: smooth; }
+  body { font-family: "Poppins", system-ui, sans-serif; color: var(--ink); background: var(--bg); line-height: 1.6; -webkit-font-smoothing: antialiased; }
+  img { display: block; max-width: 100%; }
+  a { color: inherit; text-decoration: none; }
+  .container { width: min(1200px, 92%); margin: 0 auto; }
+  .hidden { display: none !important; }
+
+  .announcement { background: var(--ink); color: #fff; text-align: center; font-size: 0.78rem; letter-spacing: 0.5px; padding: 8px 14px; font-weight: 500; }
+
+  header { position: sticky; top: 0; z-index: 50; background: rgba(252, 248, 242, 0.92); backdrop-filter: blur(12px); border-bottom: 1px solid var(--line); }
+  .nav { display: flex; align-items: center; justify-content: space-between; height: 74px; }
+  .brand { display: flex; align-items: center; gap: 10px; font-family: "Playfair Display", serif; font-size: 1.7rem; font-weight: 700; letter-spacing: 0.5px; color: var(--ink); }
+  .brand img { height: 46px; width: auto; max-width: 180px; object-fit: contain; }
+  .nav-links { display: flex; gap: 30px; }
+  .nav-links a { font-size: 0.9rem; font-weight: 500; color: var(--ink-soft); transition: color .2s; }
+  .nav-links a:hover { color: var(--ink); }
+  .nav-actions { display: flex; align-items: center; gap: 14px; }
+  .cart-btn { position: relative; background: var(--ink); color: #fff; border: none; width: 46px; height: 46px; border-radius: 50%; cursor: pointer; display: grid; place-items: center; transition: background .2s, transform .15s; }
+  .cart-btn:hover { background: var(--accent); transform: translateY(-2px); }
+  .cart-count { position: absolute; top: -4px; right: -4px; background: var(--accent); color: #fff; font-size: 0.7rem; font-weight: 700; min-width: 20px; height: 20px; border-radius: 20px; display: grid; place-items: center; padding: 0 5px; }
+
+  .hero { position: relative; min-height: 60vh; display: flex; align-items: center; background-size: cover; background-position: center; background-repeat: no-repeat; color: #fff; border-radius: 0 0 40px 40px; overflow: hidden; }
+  .hero-inner { max-width: 680px; padding: 80px 0; }
+  .hero .eyebrow { display: inline-block; letter-spacing: 3px; text-transform: uppercase; font-size: 0.72rem; font-weight: 600; color: #fff; background: rgba(0,0,0,0.28); padding: 8px 18px; border-radius: 30px; margin-bottom: 20px; }
+  .hero h1 { font-family: "Playfair Display", serif; font-size: clamp(2.4rem, 6vw, 4rem); line-height: 1.05; margin-bottom: 16px; }
+  .hero p { font-size: 1.05rem; color: #f2ece3; max-width: 480px; margin-bottom: 30px; }
+  .btn { display: inline-block; border: none; cursor: pointer; font-family: inherit; font-weight: 600; font-size: 0.95rem; padding: 15px 34px; border-radius: 40px; transition: transform .15s, box-shadow .2s, background .2s; }
+  .btn-primary { background: var(--accent); color: #fff; box-shadow: 0 10px 24px rgba(0,0,0,0.2); }
+  .btn-primary:hover { background: var(--accent-dark); transform: translateY(-2px); }
+
+  section { padding: 70px 0 20px; }
+  .section-head { text-align: center; margin-bottom: 36px; }
+  .section-head h2 { font-family: "Playfair Display", serif; font-size: clamp(1.9rem, 4vw, 2.5rem); margin-bottom: 10px; }
+
+  .toolbar { display: flex; flex-wrap: wrap; gap: 12px; align-items: center; justify-content: center; margin-bottom: 32px; }
+  .search { border: 1px solid var(--line); background: #fff; border-radius: 40px; padding: 10px 20px; font-family: inherit; font-size: 0.9rem; min-width: 220px; outline: none; }
+  .search:focus { border-color: var(--accent); }
+  .filters { display: flex; flex-wrap: wrap; gap: 10px; justify-content: center; }
+  .chip { border: 1px solid var(--line); background: #fff; color: var(--ink-soft); padding: 9px 22px; border-radius: 30px; cursor: pointer; font-size: 0.85rem; font-weight: 500; transition: all .2s; }
+  .chip:hover { border-color: var(--accent); color: var(--accent); }
+  .chip.active { background: var(--ink); color: #fff; border-color: var(--ink); }
+
+  .grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 24px; }
+  .card { background: var(--card); border-radius: var(--radius); overflow: hidden; border: 1px solid var(--line); transition: transform .25s, box-shadow .25s; display: flex; flex-direction: column; }
+  .card:hover { transform: translateY(-6px); box-shadow: var(--shadow); }
+  .card-media { position: relative; aspect-ratio: 3 / 4; overflow: hidden; background: #f6efe6; }
+  .card-media img { width: 100%; height: 100%; object-fit: cover; transition: transform .5s ease; }
+  .card:hover .card-media img { transform: scale(1.06); }
+  .badge { position: absolute; top: 14px; left: 14px; font-size: 0.7rem; font-weight: 700; letter-spacing: 0.5px; text-transform: uppercase; padding: 5px 12px; border-radius: 20px; color: #fff; background: var(--accent); }
+  .sold-overlay { position: absolute; inset: 0; background: rgba(31,42,51,0.55); display: grid; place-items: center; }
+  .sold-overlay span { background: #9aa3ab; color: #fff; font-size: 0.8rem; font-weight: 700; letter-spacing: 1px; text-transform: uppercase; padding: 8px 18px; border-radius: 30px; }
+  .quick-add { position: absolute; bottom: 14px; left: 14px; right: 14px; background: rgba(31,42,51,0.9); color: #fff; border: none; padding: 12px; border-radius: 30px; font-weight: 600; font-size: 0.85rem; cursor: pointer; opacity: 0; transform: translateY(10px); transition: all .25s; }
+  .card:hover .quick-add { opacity: 1; transform: translateY(0); }
+  .quick-add:hover { background: var(--accent); }
+  .card-body { padding: 18px; display: flex; flex-direction: column; gap: 8px; flex: 1; }
+  .card-body .category { font-size: 0.72rem; letter-spacing: 1px; text-transform: uppercase; color: var(--ink-soft); }
+  .card-body h3 { font-family: "Playfair Display", serif; font-size: 1.15rem; line-height: 1.3; }
+  .card-body .desc { font-size: 0.82rem; color: var(--ink-soft); display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
+  .price-row { display: flex; align-items: center; justify-content: space-between; margin-top: auto; }
+  .price { font-size: 1.25rem; font-weight: 700; color: var(--ink); }
+  .price .old { font-size: 0.85rem; color: #b0b6bc; text-decoration: line-through; font-weight: 400; margin-left: 8px; }
+  .add-btn { background: #f6efe6; color: var(--ink); border: none; width: 40px; height: 40px; border-radius: 50%; cursor: pointer; font-size: 1.2rem; display: grid; place-items: center; transition: all .2s; }
+  .add-btn:hover { background: var(--accent); color: #fff; }
+  .empty-note { text-align: center; color: var(--ink-soft); grid-column: 1 / -1; padding: 40px 0; }
+
+  footer { background: var(--ink); color: #cdd5db; margin-top: 70px; padding: 56px 0 28px; }
+  .footer-grid { display: grid; grid-template-columns: 2fr 1fr 1fr; gap: 40px; }
+  .footer-grid h4 { color: #fff; font-size: 0.95rem; margin-bottom: 16px; }
+  .footer-grid p { font-size: 0.88rem; color: #9fb0ba; }
+  .footer-grid ul { list-style: none; }
+  .footer-grid ul li { margin-bottom: 10px; font-size: 0.88rem; }
+  .footer-grid ul a:hover { color: var(--accent); }
+  .socials { display: flex; gap: 12px; margin-top: 18px; }
+  .socials a { width: 40px; height: 40px; border-radius: 50%; background: rgba(255,255,255,0.08); display: grid; place-items: center; transition: background .2s; }
+  .socials a:hover { background: var(--accent); }
+  .copyright { border-top: 1px solid rgba(255,255,255,0.1); margin-top: 36px; padding-top: 22px; text-align: center; font-size: 0.8rem; color: #8fa0aa; }
+
+  .overlay { position: fixed; inset: 0; background: rgba(31,42,51,0.5); opacity: 0; pointer-events: none; transition: opacity .3s; z-index: 90; }
+  .overlay.show { opacity: 1; pointer-events: auto; }
+  .drawer { position: fixed; top: 0; right: -430px; width: min(420px, 100%); height: 100%; background: #fff; z-index: 100; transition: right .35s cubic-bezier(.4,0,.2,1); display: flex; flex-direction: column; box-shadow: -20px 0 50px rgba(0,0,0,0.18); }
+  .drawer.open { right: 0; }
+  .drawer-head { display: flex; align-items: center; justify-content: space-between; padding: 22px 24px; border-bottom: 1px solid var(--line); }
+  .drawer-head h3 { font-family: "Playfair Display", serif; font-size: 1.3rem; }
+  .drawer-close { border: none; background: #f6efe6; width: 38px; height: 38px; border-radius: 50%; cursor: pointer; font-size: 1rem; }
+  .drawer-items { flex: 1; overflow-y: auto; padding: 20px 24px; }
+  .cart-item { display: flex; gap: 14px; padding: 14px 0; border-bottom: 1px solid var(--line); }
+  .cart-item img { width: 70px; height: 90px; object-fit: cover; border-radius: 10px; }
+  .cart-item .info { flex: 1; }
+  .cart-item .info h4 { font-size: 0.9rem; font-weight: 600; }
+  .cart-item .info .price { font-size: 0.9rem; color: var(--accent); }
+  .qty { display: flex; align-items: center; gap: 10px; margin-top: 8px; }
+  .qty button { width: 26px; height: 26px; border-radius: 50%; border: 1px solid var(--line); background: #fff; cursor: pointer; }
+  .qty span { min-width: 20px; text-align: center; font-weight: 600; }
+  .remove { border: none; background: none; color: #c0392b; cursor: pointer; font-size: 0.78rem; }
+  .drawer-foot { padding: 22px 24px; border-top: 1px solid var(--line); }
+  .drawer-foot .subtotal { display: flex; justify-content: space-between; font-size: 1rem; margin-bottom: 16px; }
+  .drawer-foot .subtotal strong { font-size: 1.3rem; }
+  .drawer-foot .btn { width: 100%; text-align: center; }
+
+  .toast { position: fixed; bottom: 28px; left: 50%; transform: translateX(-50%) translateY(120px); background: var(--ink); color: #fff; padding: 14px 26px; border-radius: 40px; font-size: 0.88rem; font-weight: 500; box-shadow: var(--shadow); z-index: 300; transition: transform .35s cubic-bezier(.4,0,.2,1); }
+  .toast.show { transform: translateX(-50%) translateY(0); }
+
+  @media (max-width: 1024px) { .grid { grid-template-columns: repeat(3, 1fr); } .footer-grid { grid-template-columns: 1fr 1fr; } }
+  @media (max-width: 720px) {
+    .nav-links { display: none; }
+    .grid { grid-template-columns: repeat(2, 1fr); gap: 14px; }
+    .hero { min-height: 50vh; }
+  }
+</style>
+</head>
+<body>
+
+  <div class="announcement hidden" id="announcement"></div>
+
+  <header>
+    <div class="container nav">
+      <a href="#" class="brand" id="brand"></a>
+      <nav class="nav-links">
+        <a href="#catalogo">Catálogo</a>
+        <a href="#contacto">Contacto</a>
+      </nav>
+      <div class="nav-actions">
+        <button class="cart-btn" id="openCart" aria-label="Abrir carrito">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/><path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"/></svg>
+          <span class="cart-count" id="cartCount">0</span>
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <main>
+    <section style="padding-top: 24px;">
+      <div class="container">
+        <div class="hero" id="hero">
+          <div class="container hero-inner">
+            <span class="eyebrow hidden" id="heroEyebrow">Bienvenidos</span>
+            <h1 id="heroTitle"></h1>
+            <p id="heroTagline" class="hidden"></p>
+            <a href="#catalogo" class="btn btn-primary">Ver productos</a>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section id="catalogo">
+      <div class="container">
+        <div class="section-head"><h2>Nuestros productos</h2></div>
+        <div class="toolbar">
+          <input class="search" id="search" type="text" placeholder="Buscar producto..." />
+        </div>
+        <div class="filters" id="filters"></div>
+        <div style="height: 24px;"></div>
+        <div class="grid" id="grid"></div>
+      </div>
+    </section>
+  </main>
+
+  <footer id="contacto">
+    <div class="container">
+      <div class="footer-grid">
+        <div>
+          <h4 id="footerBrand"></h4>
+          <p id="footerText"></p>
+          <div class="socials" id="socials"></div>
+        </div>
+        <div>
+          <h4>Enlaces</h4>
+          <ul>
+            <li><a href="#catalogo">Catálogo</a></li>
+            <li><a href="#contacto">Contacto</a></li>
+          </ul>
+        </div>
+        <div>
+          <h4>Contacto</h4>
+          <ul id="footerContact"></ul>
+        </div>
+      </div>
+      <div class="copyright" id="copyright"></div>
+    </div>
+  </footer>
+
+  <div class="overlay" id="overlay"></div>
+  <aside class="drawer" id="drawer" aria-hidden="true">
+    <div class="drawer-head">
+      <h3>Tu pedido</h3>
+      <button class="drawer-close" id="closeCart">✕</button>
+    </div>
+    <div class="drawer-items" id="drawerItems"></div>
+    <div class="drawer-foot">
+      <div class="subtotal"><span>Total</span><strong id="subtotal"></strong></div>
+      <button class="btn btn-primary" id="checkout">Pedir por WhatsApp</button>
+    </div>
+  </aside>
+
+  <div class="toast" id="toast">Producto agregado ✓</div>
+
+<script>
+  const DEFAULT_CONTENT = {
+    settings: {
+      title: "Tu Tienda",
+      logo: "",
+      tagline: "",
+      announcement: "",
+      primaryColor: "#ff6f61",
+      currency: "S/",
+      whatsapp: "51999000000",
+      instagram: "",
+      email: "",
+      heroImage: "",
+      footerText: ""
+    },
+    products: []
+  };
+
+  let CONTENT = null;
+  let cart = [];
+  let activeFilter = "all";
+  let searchTerm = "";
+
+  const $ = (id) => document.getElementById(id);
+
+  function money(n) {
+    const c = (CONTENT.settings.currency || "").trim();
+    return c + Number(n).toFixed(2).replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+  }
+
+  function shade(hex, pct) {
+    const n = parseInt(hex.replace("#", ""), 16);
+    let r = (n >> 16) & 255, g = (n >> 8) & 255, b = n & 255;
+    r = Math.max(0, Math.min(255, Math.round(r * (1 + pct / 100))));
+    g = Math.max(0, Math.min(255, Math.round(g * (1 + pct / 100))));
+    b = Math.max(0, Math.min(255, Math.round(b * (1 + pct / 100))));
+    return `#${((1 << 24) | (r << 16) | (g << 8) | b).toString(16).slice(1)}`;
+  }
+
+  function applySettings() {
+    const s = CONTENT.settings;
+    const accent = s.primaryColor || "#ff6f61";
+    document.documentElement.style.setProperty("--accent", accent);
+    document.documentElement.style.setProperty("--accent-dark", shade(accent, -14));
+    document.title = s.title || "Tienda";
+
+    // Marca (logo o título)
+    const brand = $("brand");
+    if (s.logo) {
+      brand.innerHTML = `<img src="${s.logo}" alt="${s.title}" onerror="this.remove()">`;
+    } else {
+      brand.innerHTML = `<span>${s.title}</span>`;
+    }
+    $("footerBrand").textContent = s.title || "";
+
+    // Aviso
+    const ann = $("announcement");
+    if (s.announcement) { ann.textContent = s.announcement; ann.classList.remove("hidden"); }
+    else ann.classList.add("hidden");
+
+    // Hero
+    $("heroTitle").textContent = s.title || "Tienda";
+    if (s.tagline) { $("heroTagline").textContent = s.tagline; $("heroTagline").classList.remove("hidden"); }
+    else $("heroTagline").classList.add("hidden");
+    const hero = $("hero");
+    if (s.heroImage) {
+      hero.style.backgroundImage = `linear-gradient(115deg, rgba(31,42,51,0.72), rgba(31,42,51,0.25) 55%, rgba(0,0,0,0.1)), url("${s.heroImage}")`;
+    } else {
+      hero.style.backgroundImage = `linear-gradient(120deg, ${accent}, ${shade(accent, -25)})`;
+    }
+
+    // Footer
+    $("footerText").textContent = s.footerText || "";
+
+    // Sociales
+    const socials = $("socials");
+    let html = "";
+    if (s.instagram) html += `<a href="https://instagram.com/${s.instagram}" target="_blank" rel="noopener" aria-label="Instagram"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="2" width="20" height="20" rx="5"/><circle cx="12" cy="12" r="4"/><line x1="17.5" y1="6.5" x2="17.5" y2="6.5"/></svg></a>`;
+    if (s.whatsapp) html += `<a href="https://wa.me/${s.whatsapp}" target="_blank" rel="noopener" aria-label="WhatsApp"><svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M17.47 14.38c-.3-.15-1.76-.87-2.03-.97-.27-.1-.47-.15-.67.15-.2.3-.77.97-.94 1.17-.17.2-.35.22-.65.07-.3-.15-1.26-.46-2.4-1.48-.89-.79-1.49-1.77-1.66-2.07-.17-.3-.02-.46.13-.61.13-.13.3-.35.45-.52.15-.17.2-.3.3-.5.1-.2.05-.37-.02-.52-.08-.15-.67-1.62-.92-2.22-.24-.58-.49-.5-.67-.51h-.57c-.2 0-.52.07-.8.37-.27.3-1.04 1.02-1.04 2.5 0 1.47 1.07 2.9 1.22 3.1.15.2 2.1 3.2 5.1 4.49.71.3 1.27.49 1.7.63.72.23 1.37.2 1.88.12.57-.08 1.76-.72 2-1.42.25-.7.25-1.29.18-1.42-.08-.13-.27-.2-.57-.35z"/></svg></a>`;
+    if (s.email) html += `<a href="mailto:${s.email}" aria-label="Correo"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg></a>`;
+    socials.innerHTML = html;
+    socials.classList.toggle("hidden", !html);
+
+    // Contacto
+    const contact = [];
+    if (s.whatsapp) contact.push(`<li>WhatsApp: ${s.whatsapp}</li>`);
+    if (s.email) contact.push(`<li>${s.email}</li>`);
+    $("footerContact").innerHTML = contact.join("") || "<li>Pedidos por WhatsApp</li>";
+
+    $("copyright").textContent = `© ${new Date().getFullYear()} ${s.title || "Tienda"} — Todos los derechos reservados.`;
+  }
+
+  function getCategories() {
+    const cats = new Set();
+    CONTENT.products.forEach(p => { if (p.category && p.category.trim()) cats.add(p.category.trim()); });
+    return Array.from(cats);
+  }
+
+  function renderFilters() {
+    const cats = getCategories();
+    const f = $("filters");
+    if (!cats.length) { f.innerHTML = ""; return; }
+    f.innerHTML = `<button class="chip active" data-filter="all">Todos</button>` +
+      cats.map(c => `<button class="chip" data-filter="${c}">${c}</button>`).join("");
+  }
+
+  function renderProducts() {
+    const grid = $("grid");
+    let list = CONTENT.products;
+    if (activeFilter !== "all") list = list.filter(p => (p.category || "").trim() === activeFilter);
+    if (searchTerm) {
+      const q = searchTerm.toLowerCase();
+      list = list.filter(p => (p.name || "").toLowerCase().includes(q) || (p.description || "").toLowerCase().includes(q) || (p.category || "").toLowerCase().includes(q));
+    }
+
+    if (!list.length) {
+      grid.innerHTML = `<div class="empty-note">No hay productos que coincidan.</div>`;
+      return;
+    }
+
+    grid.innerHTML = list.map(p => `
+      <article class="card">
+        <div class="card-media">
+          <img src="${p.image || ''}" alt="${p.name}" loading="lazy" onerror="this.onerror=null;this.src='https://placehold.co/600x750/f6efe6/1f2a33?text=${encodeURIComponent(p.name || 'Sin+imagen')}'">
+          ${p.featured && !p.soldOut ? `<span class="badge">Nuevo</span>` : ""}
+          ${p.soldOut ? `<div class="sold-overlay"><span>Agotado</span></div>` : `<button class="quick-add" onclick="addToCart('${String(p.name).replace(/'/g, "\\'")}')">Agregar al pedido</button>`}
+        </div>
+        <div class="card-body">
+          ${p.category ? `<span class="category">${p.category}</span>` : ""}
+          <h3>${p.name}</h3>
+          ${p.description ? `<p class="desc">${p.description}</p>` : ""}
+          <div class="price-row">
+            <div class="price">${money(p.price)}${p.oldPrice ? `<span class="old">${money(p.oldPrice)}</span>` : ""}</div>
+            ${!p.soldOut ? `<button class="add-btn" onclick="addToCart('${String(p.name).replace(/'/g, "\\'")}')" aria-label="Agregar">+</button>` : ""}
+          </div>
+        </div>
+      </article>`).join("");
+  }
+
+  function addToCart(name) {
+    const p = CONTENT.products.find(x => x.name === name);
+    if (!p) return;
+    const existing = cart.find(x => x.name === name);
+    if (existing) existing.qty++;
+    else cart.push({ ...p, qty: 1 });
+    updateCart();
+    showToast("Agregado a tu pedido ✓");
+  }
+  function removeFromCart(name) { cart = cart.filter(x => x.name !== name); updateCart(); }
+  function changeQty(name, delta) {
+    const item = cart.find(x => x.name === name);
+    if (!item) return;
+    item.qty += delta;
+    if (item.qty <= 0) cart = cart.filter(x => x.name !== name);
+    updateCart();
+  }
+  function cartTotal() { return cart.reduce((s, x) => s + x.price * x.qty, 0); }
+
+  function updateCart() {
+    const total = cartTotal();
+    const count = cart.reduce((s, x) => s + x.qty, 0);
+    $("cartCount").textContent = count;
+    $("subtotal").textContent = money(total);
+    if (!cart.length) {
+      $("drawerItems").innerHTML = `<p style="color:var(--ink-soft); text-align:center; padding:30px 0;">Tu pedido está vacío.</p>`;
+    } else {
+      $("drawerItems").innerHTML = cart.map(x => `
+        <div class="cart-item">
+          <img src="${x.image || ''}" alt="${x.name}" onerror="this.onerror=null;this.src='https://placehold.co/140x180/f6efe6/1f2a33?text=${encodeURIComponent(x.name)}'">
+          <div class="info">
+            <h4>${x.name}</h4>
+            <span class="price">${money(x.price)}</span>
+            <div class="qty">
+              <button onclick="changeQty('${String(x.name).replace(/'/g, "\\'")}', -1)">−</button>
+              <span>${x.qty}</span>
+              <button onclick="changeQty('${String(x.name).replace(/'/g, "\\'")}', 1)">+</button>
+              <button class="remove" onclick="removeFromCart('${String(x.name).replace(/'/g, "\\'")}')" style="margin-left:auto;">Quitar</button>
+            </div>
+          </div>
+        </div>`).join("");
+    }
+  }
+
+  function showToast(msg) {
+    const t = $("toast");
+    t.textContent = msg;
+    t.classList.add("show");
+    clearTimeout(t._t);
+    t._t = setTimeout(() => t.classList.remove("show"), 2200);
+  }
+
+  function openCart() { $("drawer").classList.add("open"); $("overlay").classList.add("show"); }
+  function closeCart() { $("drawer").classList.remove("open"); $("overlay").classList.remove("show"); }
+
+  async function load() {
+    CONTENT = JSON.parse(JSON.stringify(DEFAULT_CONTENT));
+    try {
+      const r = await fetch("content.json", { cache: "no-store" });
+      if (r.ok) CONTENT = await r.json();
+    } catch (e) {}
+    applySettings();
+    renderFilters();
+    renderProducts();
+    updateCart();
+  }
+
+  $("openCart").addEventListener("click", openCart);
+  $("closeCart").addEventListener("click", closeCart);
+  $("overlay").addEventListener("click", closeCart);
+
+  $("filters").addEventListener("click", (e) => {
+    const chip = e.target.closest(".chip");
+    if (!chip) return;
+    $("filters").querySelectorAll(".chip").forEach(c => c.classList.remove("active"));
+    chip.classList.add("active");
+    activeFilter = chip.dataset.filter;
+    renderProducts();
+  });
+
+  $("search").addEventListener("input", (e) => {
+    searchTerm = e.target.value.trim();
+    renderProducts();
+  });
+
+  $("checkout").addEventListener("click", () => {
+    if (!cart.length) return showToast("Tu pedido está vacío");
+    const items = cart.map(x => `${x.name} x${x.qty}`).join(", ");
+    const msg = encodeURIComponent(`Hola! Quiero pedir: ${items} — Total: ${money(cartTotal())}`);
+    window.open(`https://wa.me/${CONTENT.settings.whatsapp}?text=${msg}`, "_blank");
+  });
+
+  load();
+</script>
+</body>
+</html>

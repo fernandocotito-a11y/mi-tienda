@@ -1,0 +1,77 @@
+{
+  "settings": {
+    "title": "Tu Tienda",
+    "logo": "",
+    "tagline": "Cosas lindas que traigo de mis viajes",
+    "announcement": "Envíos a todo el país — pedidos por WhatsApp",
+    "primaryColor": "#ff6f61",
+    "currency": "S/",
+    "whatsapp": "51999000000",
+    "instagram": "",
+    "email": "",
+    "heroImage": "",
+    "footerText": "Productos seleccionados a mano en mis viajes por el mundo."
+  },
+  "products": [
+    {
+      "name": "Vestido Floral",
+      "price": 89,
+      "oldPrice": 109,
+      "category": "Ropa",
+      "image": "https://placehold.co/600x750/f6efe6/1f2a33?text=Vestido+Floral",
+      "description": "Vestido ligero ideal para la playa o la ciudad.",
+      "soldOut": false,
+      "featured": true
+    },
+    {
+      "name": "Bolso de Mano",
+      "price": 59,
+      "oldPrice": null,
+      "category": "Accesorios",
+      "image": "https://placehold.co/600x750/e8ddd0/1f2a33?text=Bolso+de+Mano",
+      "description": "Bolso artesanal con cierre metálico.",
+      "soldOut": false,
+      "featured": false
+    },
+    {
+      "name": "Zapatillas Urbanas",
+      "price": 129,
+      "oldPrice": 149,
+      "category": "Calzado",
+      "image": "https://placehold.co/600x750/d9e2e4/1f2a33?text=Zapatillas",
+      "description": "Talla única disponible en colores neutros.",
+      "soldOut": false,
+      "featured": true
+    },
+    {
+      "name": "Gorra Trucker",
+      "price": 39,
+      "oldPrice": null,
+      "category": "Accesorios",
+      "image": "https://placehold.co/600x750/e5d8e6/1f2a33?text=Gorra+Trucker",
+      "description": "Gorra bordada de ajuste trasero.",
+      "soldOut": true,
+      "featured": false
+    },
+    {
+      "name": "Blusa de Lino",
+      "price": 75,
+      "oldPrice": null,
+      "category": "Ropa",
+      "image": "https://placehold.co/600x750/f3eadf/1f2a33?text=Blusa+de+Lino",
+      "description": "Blusa fresca, perfecta para el calor.",
+      "soldOut": false,
+      "featured": false
+    },
+    {
+      "name": "Collar Artesanal",
+      "price": 45,
+      "oldPrice": 55,
+      "category": "Accesorios",
+      "image": "https://placehold.co/600x750/efe0cd/1f2a33?text=Collar",
+      "description": "Hecho a mano con piedras naturales.",
+      "soldOut": false,
+      "featured": false
+    }
+  ]
+}

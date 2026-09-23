@@ -1,0 +1,45 @@
+backend:
+  name: git-gateway
+  branch: main
+
+media_folder: "images"
+public_folder: "/images"
+
+collections:
+  - name: "contenido"
+    label: "Contenido"
+    editor:
+      preview: false
+    files:
+      - name: "tienda"
+        label: "Configuración y productos"
+        file: "content.json"
+        fields:
+          - label: "Ajustes de la tienda"
+            name: "settings"
+            widget: "object"
+            fields:
+              - { label: "Título", name: "title", widget: "string", hint: "Nombre de la tienda (aparece arriba y en la pestaña del navegador)" }
+              - { label: "Logo", name: "logo", widget: "image", required: false, hint: "Opcional. Si no pones logo, se muestra el título." }
+              - { label: "Frase / descripción corta", name: "tagline", widget: "string", required: false }
+              - { label: "Aviso (barra superior)", name: "announcement", widget: "string", required: false }
+              - { label: "Color principal", name: "primaryColor", widget: "color", default: "#ff6f61" }
+              - { label: "Moneda", name: "currency", widget: "string", default: "S/", hint: "Ej: S/, $, €" }
+              - { label: "WhatsApp (solo números)", name: "whatsapp", widget: "string", hint: "Con código de país. Ej: 51999000000" }
+              - { label: "Instagram", name: "instagram", widget: "string", required: false }
+              - { label: "Correo", name: "email", widget: "string", required: false }
+              - { label: "Imagen de portada", name: "heroImage", widget: "image", required: false }
+              - { label: "Texto del pie de página", name: "footerText", widget: "text", required: false }
+          - label: "Productos"
+            name: "products"
+            widget: "list"
+            summary: "{{fields.name}} — {{fields.price}}"
+            fields:
+              - { label: "Nombre", name: "name", widget: "string" }
+              - { label: "Precio", name: "price", widget: "number", value_type: "float" }
+              - { label: "Precio anterior (tachado)", name: "oldPrice", widget: "number", value_type: "float", required: false }
+              - { label: "Categoría", name: "category", widget: "string", hint: "Escríbela libre. Ej: Ropa, Accesorios, Calzado" }
+              - { label: "Foto", name: "image", widget: "image" }
+              - { label: "Descripción", name: "description", widget: "text", required: false }
+              - { label: "Agotado", name: "soldOut", widget: "boolean", default: false }
+              - { label: "Destacado", name: "featured", widget: "boolean", default: false, hint: "Muestra la etiqueta 'Nuevo'" }
