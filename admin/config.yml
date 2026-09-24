@@ -21,9 +21,12 @@ collections:
             fields:
               - { label: "Título", name: "title", widget: "string", hint: "Nombre de la tienda (aparece arriba y en la pestaña del navegador)" }
               - { label: "Logo", name: "logo", widget: "image", required: false, hint: "Opcional. Si no pones logo, se muestra el título." }
+              - { label: "Tamaño del logo (px)", name: "logoHeight", widget: "number", value_type: "int", default: 46, hint: "Número mayor = logo más grande. Ej: 60" }
               - { label: "Frase / descripción corta", name: "tagline", widget: "string", required: false }
               - { label: "Aviso (barra superior)", name: "announcement", widget: "string", required: false }
               - { label: "Color principal", name: "primaryColor", widget: "color", default: "#ff6f61" }
+              - { label: "Color de fondo de la página", name: "backgroundColor", widget: "color", default: "#fcf8f2", hint: "Fondo general de la página (ya no tiene que ser blanco)" }
+              - { label: "Imagen de fondo (opcional)", name: "backgroundImage", widget: "image", required: false, hint: "Cubre toda la página como fondo" }
               - { label: "Moneda", name: "currency", widget: "string", default: "S/", hint: "Ej: S/, $, €" }
               - { label: "WhatsApp (solo números)", name: "whatsapp", widget: "string", hint: "Con código de país. Ej: 51999000000" }
               - { label: "Instagram", name: "instagram", widget: "string", required: false }

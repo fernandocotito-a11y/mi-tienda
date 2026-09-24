@@ -7,5 +7,24 @@
 </head>
 <body>
   <script src="https://unpkg.com/decap-cms@^3.0.0/dist/decap-cms.js"></script>
+  <script>
+    (function () {
+      function restrict(el) {
+        var a = el.getAttribute("accept") || "";
+        if (a.indexOf("image") !== -1) {
+          el.setAttribute("accept", ".jpg,.jpeg,.png,.webp,image/jpeg,image/png,image/webp");
+        }
+      }
+      new MutationObserver(function (muts) {
+        muts.forEach(function (m) {
+          (m.addedNodes || []).forEach(function (n) {
+            if (n.nodeType !== 1) return;
+            if (n.tagName === "INPUT" && n.type === "file") restrict(n);
+            if (n.querySelectorAll) n.querySelectorAll("input[type=file]").forEach(restrict);
+          });
+        });
+      }).observe(document.body, { childList: true, subtree: true });
+    })();
+  </script>
 </body>
 </html>

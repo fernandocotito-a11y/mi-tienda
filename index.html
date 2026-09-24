@@ -43,7 +43,7 @@
   header { position: sticky; top: 0; z-index: 50; background: rgba(252, 248, 242, 0.92); backdrop-filter: blur(12px); border-bottom: 1px solid var(--line); }
   .nav { display: flex; align-items: center; justify-content: space-between; height: 74px; }
   .brand { display: flex; align-items: center; gap: 10px; font-family: "Playfair Display", serif; font-size: 1.7rem; font-weight: 700; letter-spacing: 0.5px; color: var(--ink); }
-  .brand img { height: 46px; width: auto; max-width: 180px; object-fit: contain; }
+  .brand img { height: var(--logo-h, 46px); width: auto; max-width: 220px; object-fit: contain; }
   .nav-links { display: flex; gap: 30px; }
   .nav-links a { font-size: 0.9rem; font-weight: 500; color: var(--ink-soft); transition: color .2s; }
   .nav-links a:hover { color: var(--ink); }
@@ -271,7 +271,20 @@
     const accent = s.primaryColor || "#ff6f61";
     document.documentElement.style.setProperty("--accent", accent);
     document.documentElement.style.setProperty("--accent-dark", shade(accent, -14));
+    document.documentElement.style.setProperty("--logo-h", (s.logoHeight || 46) + "px");
     document.title = s.title || "Tienda";
+
+    // Fondo de la página
+    document.body.style.backgroundColor = s.backgroundColor || "#fcf8f2";
+    if (s.backgroundImage) {
+      document.body.style.backgroundImage = `url("${s.backgroundImage}")`;
+      document.body.style.backgroundSize = "cover";
+      document.body.style.backgroundAttachment = "fixed";
+      document.body.style.backgroundPosition = "center";
+      document.body.style.backgroundRepeat = "no-repeat";
+    } else {
+      document.body.style.backgroundImage = "none";
+    }
 
     // Marca (logo o título)
     const brand = $("brand");
