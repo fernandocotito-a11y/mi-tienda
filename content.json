@@ -1,24 +1,24 @@
 {
   "settings": {
-    "title": "Tu Tienda",
+    "heroImage": "",
+    "primaryColor": "#ff6f61",
+    "announcement": "Envíos a todo el país — pedidos por WhatsApp",
+    "footerText": "Productos seleccionados a mano en mis viajes por el mundo.",
     "logo": "",
     "tagline": "Cosas lindas que traigo de mis viajes",
-    "announcement": "Envíos a todo el país — pedidos por WhatsApp",
-    "primaryColor": "#ff6f61",
     "currency": "S/",
     "whatsapp": "51999000000",
     "instagram": "",
-    "email": "",
-    "heroImage": "",
-    "footerText": "Productos seleccionados a mano en mis viajes por el mundo."
+    "title": "Tu Tienda",
+    "email": ""
   },
   "products": [
     {
       "name": "Vestido Floral",
-      "price": 89,
-      "oldPrice": 109,
+      "price": 499,
+      "oldPrice": 500,
       "category": "Ropa",
-      "image": "https://placehold.co/600x750/f6efe6/1f2a33?text=Vestido+Floral",
+      "image": "/images/ilustracion-de-un-pajaro-de-fantasia.jpg",
       "description": "Vestido ligero ideal para la playa o la ciudad.",
       "soldOut": false,
       "featured": true
