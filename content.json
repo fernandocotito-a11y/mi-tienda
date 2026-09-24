@@ -1,15 +1,15 @@
 {
   "settings": {
-    "heroImage": "",
-    "primaryColor": "#ff6f61",
-    "announcement": "Envíos a todo el país — pedidos por WhatsApp",
-    "footerText": "Productos seleccionados a mano en mis viajes por el mundo.",
-    "logo": "",
-    "tagline": "Cosas lindas que traigo de mis viajes",
+    "heroImage": "/images/imagen-de-portada.jpg",
+    "primaryColor": "#0098a9",
+    "announcement": "Envíos a todo el país — Pedidos al WhatsApp",
+    "footerText": "© 2026 Tu Tienda Express. Todos los derechos reservados. Envíos rápidos y compras 100% seguras.",
+    "logo": "/images/logo_tienda.jfif",
+    "tagline": "Todo lo que buscas, al mejor precio y al alcance de un clic. Variedad, calidad y los mejores precios directo a tu puerta!",
     "currency": "S/",
-    "whatsapp": "51999000000",
+    "whatsapp": "51999405220",
     "instagram": "",
-    "title": "Tu Tienda",
+    "title": "Tu Tienda Express",
     "email": ""
   },
   "products": [
