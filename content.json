@@ -1,19 +1,24 @@
 {
   "settings": {
-    "heroImage": "/images/imagen-de-portada.jpg",
-    "primaryColor": "#10b8e2",
-    "announcement": "Envíos a todo el país — Pedidos al WhatsApp",
-    "footerText": "© 2026 Tu Tienda Express. Todos los derechos reservados. Envíos rápidos y compras 100% seguras.",
-    "logo": "/images/logo_tienda-sin-fondo-.png",
+    "title": "Tu Tienda",
+    "logo": "",
+    "logoHeight": 46,
+    "tagline": "Cosas lindas que traigo de mis viajes",
+    "announcement": "Envíos a todo el país — pedidos por WhatsApp",
+    "primaryColor": "#ff6f61",
+    "backgroundColor": "#fcf8f2",
     "backgroundImage": "",
-    "tagline": "Todo lo que buscas, al mejor precio y al alcance de un clic. Variedad, calidad y los mejores precios directo a tu puerta!!!",
     "currency": "S/",
-    "whatsapp": "51999405220",
-    "logoHeight": 80,
+    "whatsapp": "51999000000",
     "instagram": "",
-    "backgroundColor": "#e9f4f6",
-    "title": "Tu Tienda Express",
-    "email": ""
+    "email": "",
+    "heroImage": "",
+    "footerText": "Productos seleccionados a mano en mis viajes por el mundo.",
+    "yapeName": "",
+    "yapeNumber": "",
+    "yapeQr": "",
+    "plinNumber": "",
+    "plinQr": ""
   },
   "products": [
     {
@@ -75,6 +80,23 @@
       "description": "Hecho a mano con piedras naturales.",
       "soldOut": false,
       "featured": false
+    }
+  ],
+  "testimonials": [
+    {
+      "name": "Mariana G.",
+      "text": "Me encantó todo, llegó rapidísimo y la calidad es mejor de lo que esperaba. ¡Volveré a comprar!",
+      "rating": 5
+    },
+    {
+      "name": "Camila R.",
+      "text": "El pago por Yape fue súper fácil y me respondieron por WhatsApp al instante. Muy recomendado.",
+      "rating": 5
+    },
+    {
+      "name": "Alejandra T.",
+      "text": "Productos únicos, no encuentras esto en cualquier lado. La atención es excelente.",
+      "rating": 5
     }
   ]
 }
