@@ -8,9 +8,13 @@
 <link rel="preconnect" href="https://fonts.googleapis.com" />
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
 <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@500;600;700&family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
+<script type="text/javascript" src="https://identity.netlify.com/v1/netlify-identity-widget.js"></script>
 <script>
-  if (window.location.hash && (window.location.hash.indexOf("invite_token") !== -1 || window.location.hash.indexOf("recovery_token") !== -1)) {
-    window.location.replace("/admin/" + window.location.hash);
+  if (window.netlifyIdentity) {
+    netlifyIdentity.init();
+    if (window.location.hash.indexOf("_token") !== -1) {
+      netlifyIdentity.open();
+    }
   }
 </script>
 <style>
