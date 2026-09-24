@@ -1,19 +1,19 @@
 {
   "settings": {
-    "title": "Tu Tienda",
-    "logo": "",
-    "logoHeight": 46,
-    "tagline": "Cosas lindas que traigo de mis viajes",
-    "announcement": "Envíos a todo el país — pedidos por WhatsApp",
+    "heroImage": "",
     "primaryColor": "#ff6f61",
-    "backgroundColor": "#fcf8f2",
+    "announcement": "Envíos a todo el país — pedidos por WhatsApp",
+    "footerText": "Productos seleccionados a mano en mis viajes por el mundo.",
+    "logo": "",
     "backgroundImage": "",
+    "tagline": "Cosas lindas que traigo de mis viajes",
     "currency": "S/",
     "whatsapp": "51999000000",
+    "logoHeight": 80,
     "instagram": "",
-    "email": "",
-    "heroImage": "",
-    "footerText": "Productos seleccionados a mano en mis viajes por el mundo."
+    "backgroundColor": "#fcf8f2",
+    "title": "Tu Tienda",
+    "email": ""
   },
   "products": [
     {
