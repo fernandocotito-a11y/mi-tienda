@@ -1,6 +1,8 @@
 backend:
-  name: git-gateway
+  name: github
+  repo: fernandocotito-a11y/mi-tienda
   branch: main
+  site_domain: mitienda-express.netlify.app
 
 media_folder: "images"
 public_folder: "/images"
