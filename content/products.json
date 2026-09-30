@@ -1,25 +1,4 @@
 {
-  "settings": {
-    "heroImage": "/images/imagen-de-portada_2.jpg",
-    "primaryColor": "#10b8e2",
-    "plinQr": "/images/plin-fernando.jpeg",
-    "yapeNumber": "999405220",
-    "announcement": "Envíos a todo el país — Pedidos al WhatsApp",
-    "footerText": "© 2026 Tu Tienda Express. Todos los derechos reservados. Envíos rápidos y compras 100% seguras.",
-    "yapeName": "",
-    "plinNumber": "999405220",
-    "logo": "/images/logo_tienda-sin-fondo-.png",
-    "backgroundImage": "/images/fondo-2.jpg",
-    "tagline": "Todo lo que buscas, al mejor precio y al alcance de un clic. Variedad, calidad y los mejores precios directo a tu puerta!!!",
-    "currency": "S/",
-    "whatsapp": "51999405220",
-    "logoHeight": 110,
-    "instagram": "",
-    "backgroundColor": "#e9f4f6",
-    "title": "Tu Tienda Express",
-    "email": "",
-    "yapeQr": "/images/yape-fernando.jpeg"
-  },
   "products": [
     {
       "name": "Vestido Floral",

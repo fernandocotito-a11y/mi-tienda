@@ -6,54 +6,83 @@ media_folder: "images"
 public_folder: "/images"
 
 collections:
-  - name: "contenido"
-    label: "Contenido"
+  # ─────────────────────────────────────────────
+  # PRODUCTOS  (lo que más se usa a diario)
+  # ─────────────────────────────────────────────
+  - name: "productos"
+    label: "🛍️ Productos"
     editor:
       preview: false
     files:
-      - name: "tienda"
-        label: "Configuración y productos"
-        file: "content.json"
+      - name: "productos"
+        label: "Agregar / editar productos"
+        file: "content/products.json"
         fields:
-          - label: "Ajustes de la tienda"
-            name: "settings"
-            widget: "object"
-            fields:
-              - { label: "Título", name: "title", widget: "string", hint: "Nombre de la tienda (aparece arriba y en la pestaña del navegador)" }
-              - { label: "Logo", name: "logo", widget: "image", required: false, hint: "Opcional. Si no pones logo, se muestra el título." }
-              - { label: "Tamaño del logo (px)", name: "logoHeight", widget: "number", value_type: "int", default: 46, hint: "Número mayor = logo más grande. Ej: 60" }
-              - { label: "Frase / descripción corta", name: "tagline", widget: "string", required: false }
-              - { label: "Aviso (barra superior)", name: "announcement", widget: "string", required: false }
-              - { label: "Color principal", name: "primaryColor", widget: "color", default: "#ff6f61" }
-              - { label: "Color de fondo de la página", name: "backgroundColor", widget: "color", default: "#fcf8f2" }
-              - { label: "Imagen de fondo (opcional)", name: "backgroundImage", widget: "image", required: false, hint: "Cubre toda la página como fondo" }
-              - { label: "Moneda", name: "currency", widget: "string", default: "S/", hint: "Ej: S/, $, €" }
-              - { label: "WhatsApp (solo números)", name: "whatsapp", widget: "string", hint: "Con código de país. Ej: 51999000000" }
-              - { label: "Instagram", name: "instagram", widget: "string", required: false }
-              - { label: "Correo", name: "email", widget: "string", required: false }
-              - { label: "Imagen de portada", name: "heroImage", widget: "image", required: false }
-              - { label: "Texto del pie de página", name: "footerText", widget: "text", required: false }
-              - { label: "Nombre Yape (titular)", name: "yapeName", widget: "string", required: false }
-              - { label: "Número Yape", name: "yapeNumber", widget: "string", required: false }
-              - { label: "QR Yape (imagen)", name: "yapeQr", widget: "image", required: false, hint: "Captura del QR de tu Yape" }
-              - { label: "Número Plin", name: "plinNumber", widget: "string", required: false }
-              - { label: "QR Plin (imagen)", name: "plinQr", widget: "image", required: false, hint: "Captura del QR de tu Plin" }
           - label: "Productos"
             name: "products"
             widget: "list"
+            collapsed: true
+            add_to_top: true
             summary: "{{fields.name}} — {{fields.price}}"
             fields:
-              - { label: "Nombre", name: "name", widget: "string" }
-              - { label: "Precio", name: "price", widget: "number", value_type: "float" }
-              - { label: "Precio anterior (tachado)", name: "oldPrice", widget: "number", value_type: "float", required: false }
-              - { label: "Categoría", name: "category", widget: "string", hint: "Escríbela libre. Ej: Ropa, Accesorios, Calzado" }
-              - { label: "Foto", name: "image", widget: "image" }
+              - { label: "Nombre", name: "name", widget: "string", hint: "Cómo se llama el producto. Ej: Vestido Floral" }
+              - { label: "Foto", name: "image", widget: "image", hint: "Sube la foto del producto" }
+              - { label: "Precio", name: "price", widget: "number", value_type: "float", hint: "Solo el número, sin símbolo. Ej: 89.90" }
+              - { label: "Precio anterior (oferta)", name: "oldPrice", widget: "number", value_type: "float", required: false, hint: "Opcional. Se muestra tachado junto al precio" }
+              - { label: "Categoría", name: "category", widget: "select", options: ["Ropa", "Accesorios", "Calzado", "Otros"], default: "Ropa", hint: "Elige la categoría (sirve para los filtros de la tienda)" }
               - { label: "Descripción", name: "description", widget: "text", required: false }
-              - { label: "Agotado", name: "soldOut", widget: "boolean", default: false }
-              - { label: "Destacado", name: "featured", widget: "boolean", default: false, hint: "Muestra la etiqueta 'Nuevo'" }
-          - label: "Opiniones de clientas"
+              - { label: "Agotado", name: "soldOut", widget: "boolean", default: false, hint: "Marca si no hay stock disponible" }
+              - { label: "Destacado (etiqueta 'Nuevo')", name: "featured", widget: "boolean", default: false, hint: "Muestra la etiqueta 'Nuevo' en el producto" }
+
+  # ─────────────────────────────────────────────
+  # AJUSTES DE LA TIENDA  (se configura pocas veces)
+  # ─────────────────────────────────────────────
+  - name: "ajustes"
+    label: "⚙️ Ajustes de la tienda"
+    editor:
+      preview: false
+    files:
+      - name: "ajustes"
+        label: "Datos de la tienda"
+        file: "content/settings.json"
+        fields:
+          - { label: "Nombre de la tienda", name: "title", widget: "string", hint: "Aparece arriba, en la portada y en la pestaña del navegador" }
+          - { label: "Logo", name: "logo", widget: "image", required: false, hint: "Opcional. Si no pones logo, se muestra el nombre" }
+          - { label: "Tamaño del logo (px)", name: "logoHeight", widget: "number", value_type: "int", default: 46, hint: "Número mayor = logo más grande. Ej: 60" }
+          - { label: "Frase de presentación", name: "tagline", widget: "string", required: false }
+          - { label: "Aviso (barra superior)", name: "announcement", widget: "string", required: false }
+          - { label: "Imagen de portada", name: "heroImage", widget: "image", required: false }
+          - { label: "Color principal", name: "primaryColor", widget: "color", default: "#ff6f61" }
+          - { label: "Color de fondo de la página", name: "backgroundColor", widget: "color", default: "#fcf8f2" }
+          - { label: "Imagen de fondo (opcional)", name: "backgroundImage", widget: "image", required: false, hint: "Cubre toda la página como fondo" }
+          - { label: "Moneda", name: "currency", widget: "string", default: "S/", hint: "Ej: S/, $, €" }
+          - { label: "WhatsApp (solo números)", name: "whatsapp", widget: "string", hint: "Con código de país. Ej: 51999000000" }
+          - { label: "Instagram (usuario)", name: "instagram", widget: "string", required: false, hint: "Solo el nombre de usuario, sin @. Ej: mitienda" }
+          - { label: "Correo", name: "email", widget: "string", required: false }
+          - { label: "Texto del pie de página", name: "footerText", widget: "text", required: false }
+          - { label: "Nombre Yape (titular)", name: "yapeName", widget: "string", required: false }
+          - { label: "Número Yape", name: "yapeNumber", widget: "string", required: false }
+          - { label: "QR Yape (imagen)", name: "yapeQr", widget: "image", required: false, hint: "Captura del QR de tu Yape" }
+          - { label: "Número Plin", name: "plinNumber", widget: "string", required: false }
+          - { label: "QR Plin (imagen)", name: "plinQr", widget: "image", required: false, hint: "Captura del QR de tu Plin" }
+
+  # ─────────────────────────────────────────────
+  # OPINIONES  (testimonios de clientas)
+  # ─────────────────────────────────────────────
+  - name: "opiniones"
+    label: "💬 Opiniones"
+    editor:
+      preview: false
+    files:
+      - name: "opiniones"
+        label: "Opiniones de clientas"
+        file: "content/testimonials.json"
+        fields:
+          - label: "Opiniones"
             name: "testimonials"
             widget: "list"
+            collapsed: true
+            add_to_top: true
             summary: "{{fields.name}}"
             fields:
               - { label: "Nombre", name: "name", widget: "string" }

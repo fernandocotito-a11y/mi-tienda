@@ -704,8 +704,25 @@
   async function load() {
     CONTENT = JSON.parse(JSON.stringify(DEFAULT_CONTENT));
     try {
-      const r = await fetch("content.json", { cache: "no-store" });
-      if (r.ok) CONTENT = await r.json();
+      const [sr, pr, tr] = await Promise.all([
+        fetch("content/settings.json", { cache: "no-store" }),
+        fetch("content/products.json", { cache: "no-store" }),
+        fetch("content/testimonials.json", { cache: "no-store" })
+      ]);
+      if (sr.ok) {
+        const s = await sr.json();
+        if (s && typeof s === "object") CONTENT.settings = Object.assign({}, CONTENT.settings, s);
+      }
+      if (pr.ok) {
+        const p = await pr.json();
+        const arr = Array.isArray(p) ? p : (p && p.products);
+        if (Array.isArray(arr)) CONTENT.products = arr;
+      }
+      if (tr.ok) {
+        const t = await tr.json();
+        const arr = Array.isArray(t) ? t : (t && t.testimonials);
+        if (Array.isArray(arr)) CONTENT.testimonials = arr;
+      }
     } catch (e) {}
     applySettings();
     renderFilters();
