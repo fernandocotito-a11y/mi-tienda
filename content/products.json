@@ -4,6 +4,45 @@
       "category": "Ropa",
       "soldOut": false,
       "featured": false,
+      "name": "Conjunto de bikini de playa para mujer 2026",
+      "image": "/images/bikini-brillo-marron.jpg",
+      "price": 79,
+      "oldPrice": 99
+    },
+    {
+      "category": "Ropa",
+      "soldOut": false,
+      "featured": false,
+      "name": "Nuevo Bikini de Tela Especial ",
+      "image": "/images/bikini-eoropeo.jpg",
+      "price": 69,
+      "oldPrice": 99,
+      "description": "Bikini iridiscente con copas de concha y detalles de perlas. Un look de sirena elegante para el verano."
+    },
+    {
+      "category": "Ropa",
+      "soldOut": false,
+      "featured": false,
+      "name": "Conjunto de bikini elegante",
+      "image": "/images/bikini-elegante.jpg",
+      "price": 99,
+      "oldPrice": 118,
+      "description": "Conjunto de bikini elegante y de Jacquard con tirantes de la nuca y parte inferior ligera estilo chifón"
+    },
+    {
+      "category": "Ropa",
+      "soldOut": false,
+      "featured": false,
+      "name": "Conjunto de bikini con falda ",
+      "description": "Conjunto de bikini con falda de color sólido para el Día de San Valentín, 3 piezas, tirantes anchos y diseño con aros que proporcionan un soporte cómodo para mujeres, creando un look de playa moderno, perfecto para fiestas de verano en la playa y la piscina",
+      "image": "/images/f4c9f0f2-ce22-4856-8183-7b7b9c74d510.jpg",
+      "price": 56,
+      "oldPrice": 89
+    },
+    {
+      "category": "Ropa",
+      "soldOut": false,
+      "featured": false,
       "name": "Conjunto de baño de 3 piezas ",
       "description": "Conjunto de baño de 3 piezas para mujer de verano 2026, con estampado vintage, falda de playa con abertura larga y lazo",
       "image": "/images/bikini-arcoiris-crema-y-marron.jpg",
