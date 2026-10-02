@@ -1,3 +1,9 @@
 {
-  "testimonials": []
+  "testimonials": [
+    {
+      "rating": 5,
+      "name": "Noelia",
+      "text": "Me gusta los productos que venden"
+    }
+  ]
 }
