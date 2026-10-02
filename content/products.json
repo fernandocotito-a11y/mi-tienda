@@ -4,6 +4,16 @@
       "category": "Ropa",
       "soldOut": false,
       "featured": false,
+      "image": "/images/bikini-blanco.jpg",
+      "name": "Traje de Baño Bikini Sexy de 2 Piezas para Mujer,",
+      "price": 69,
+      "oldPrice": 80,
+      "description": "Traje de Baño Bikini Sexy de 2 Piezas para Mujer, Tanga Metálico, Ropa de Baño para Vacaciones en la Playa Adecuada para Escapadas a la Playa y Fiestas de Natación"
+    },
+    {
+      "category": "Ropa",
+      "soldOut": false,
+      "featured": false,
       "image": "/images/enteriso-blanco.jpg",
       "name": "Cubierta de Hombro Descubierto Blanca",
       "price": 39,
