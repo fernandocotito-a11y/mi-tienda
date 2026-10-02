@@ -4,6 +4,26 @@
       "category": "Ropa",
       "soldOut": false,
       "featured": false,
+      "image": "/images/enteriso-blanco.jpg",
+      "name": "Cubierta de Hombro Descubierto Blanca",
+      "price": 39,
+      "oldPrice": 49.9,
+      "description": "Cubierta de Hombro Descubierto Blanca y Moderna para Mujeres, Estilo Vacacional en la Playa"
+    },
+    {
+      "category": "Accesorios",
+      "soldOut": false,
+      "featured": false,
+      "name": "Cinturón de cintas de cuentas sexy ",
+      "image": "/images/cadena-de-barriga.jpg",
+      "price": 9.9,
+      "oldPrice": 15.9,
+      "description": "cadena"
+    },
+    {
+      "category": "Ropa",
+      "soldOut": false,
+      "featured": false,
       "name": "Nuevo conjunto de bikini de 3 piezas ",
       "image": "/images/bikini-marron-con-uma-flor.jpg",
       "price": 59,
