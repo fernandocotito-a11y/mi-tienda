@@ -4,10 +4,31 @@
       "category": "Ropa",
       "soldOut": false,
       "featured": false,
+      "name": "Nuevo conjunto de bikini de 3 piezas ",
+      "image": "/images/bikini-marron-con-uma-flor.jpg",
+      "price": 59,
+      "oldPrice": 89,
+      "description": "Nuevo conjunto de bikini de 3 piezas con abertura para mujer con decoración floral de alta gama para vacaciones en la playa y traje de baño para aguas termales"
+    },
+    {
+      "category": "Ropa",
+      "soldOut": false,
+      "featured": false,
+      "image": "/images/bikini-mattrro-transparente.jpg",
+      "name": "Conjunto de bikini de tres piezas sexy de malla separada",
+      "price": 69,
+      "oldPrice": 87,
+      "description": "Nuevo conjunto de bikini de 3 piezas con abertura para mujer con decoración floral de alta gama para vacaciones en la playa y traje de baño para aguas termales"
+    },
+    {
+      "category": "Ropa",
+      "soldOut": false,
+      "featured": false,
       "name": "Conjunto de bikini de playa para mujer 2026",
       "image": "/images/bikini-brillo-marron.jpg",
       "price": 79,
-      "oldPrice": 99
+      "oldPrice": 99,
+      "description": "Conjunto de bikini de playa para mujer 2026"
     },
     {
       "category": "Ropa",
