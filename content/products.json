@@ -3,6 +3,46 @@
     {
       "category": "Ropa",
       "soldOut": false,
+      "featured": false,
+      "name": "Conjunto de baño de 3 piezas ",
+      "description": "Conjunto de baño de 3 piezas para mujer de verano 2026, con estampado vintage, falda de playa con abertura larga y lazo",
+      "image": "/images/bikini-arcoiris-crema-y-marron.jpg",
+      "price": 99,
+      "oldPrice": 137
+    },
+    {
+      "category": "Ropa",
+      "soldOut": false,
+      "featured": false,
+      "name": "Traje de baño beige fruncido de 1 pieza",
+      "description": "Traje de baño beige fruncido de 1 pieza, diseño de bustier con efecto push-up para playa y vacaciones al atardecer",
+      "price": 59,
+      "oldPrice": 69,
+      "image": "/images/bikini-enteriso-1.jpg"
+    },
+    {
+      "category": "Ropa",
+      "soldOut": false,
+      "featured": false,
+      "name": " Traje de baño de verano para mujer",
+      "image": "/images/bikini-tirante.jpg",
+      "price": 99.9,
+      "oldPrice": 149.9,
+      "description": "Traje de baño de verano para mujer, top de bikini sin tirantes con purpurina color caqui y falda con abertura alta y torsada, conjunto de playa/resort de 3 piezas\n"
+    },
+    {
+      "category": "Ropa",
+      "soldOut": false,
+      "featured": true,
+      "name": "Conjunto de bikini de 3 piezas ",
+      "image": "/images/pieza-de-tres-piezas-negro.jpg",
+      "price": 99.9,
+      "oldPrice": 139.9,
+      "description": "Conjunto de bikini de 3 piezas para mujer para vacaciones con falda cubrebañador, falda de playa con abertura, traje de baño de vacaciones que favorece la figura"
+    },
+    {
+      "category": "Ropa",
+      "soldOut": false,
       "featured": true,
       "description": "Vestido Maxi de Sirena con Tirantes Finos, Cintura Hueca, Diseño Floral con Lienzo de Puntos en Degradado Rojo Rosa, Decoración de Estrellas de Mar, Ajustado y Fruncido, Ideal para Vacaciones en la Playa",
       "name": "Vestido Maxi de Sirena",
