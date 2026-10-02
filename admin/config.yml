@@ -2,7 +2,7 @@ backend:
   name: github
   repo: fernandocotito-a11y/mi-tienda
   branch: main
-  site_domain: fernandocotito-a11y.github.io
+  site_domain: mitienda-express.com
 
 media_folder: "images"
 public_folder: "/images"
