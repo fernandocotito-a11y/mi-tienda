@@ -1,8 +1,21 @@
 {
   "products": [
     {
+      "oldPrice": 119,
+      "price": 99,
+      "name": "nuevo conjunto de traje de baño de mujer de 3 piezas con estilo de rayas de punto texturado",
+      "featured": false,
+      "sizes": [
+        "M"
+      ],
+      "soldOut": false,
+      "image": "/images/bikini-azul-a-rallas-texturado.jpg",
+      "description": "Conjunto playero de dos piezas tejido a rayas azules y crema, compuesto por un bikini triangular con accesorio de estrella de mar y un minishort ajustado a juego. Destaca por su textura calada estilo crochet y detalles de tiras anudadas que le dan un toque fresco y moderno",
+      "category": "Ropa"
+    },
+    {
       "oldPrice": 129,
-      "price": 98,
+      "price": 99,
       "name": "3 piezas / set traje de baño bikini de mujer",
       "featured": false,
       "sizes": [
