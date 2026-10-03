@@ -1,6 +1,19 @@
 {
   "products": [
     {
+      "oldPrice": 129,
+      "price": 99,
+      "name": "nuevo conjunto de 2 piezas rosa",
+      "featured": false,
+      "sizes": [
+        "M"
+      ],
+      "soldOut": false,
+      "image": "/images/enteriso-rosa.jpg",
+      "description": "nuevo conjunto de bikini 2 piezas con tirantes degradados y lazos laterales, top halter y falda de playa rosa",
+      "category": "Ropa"
+    },
+    {
       "oldPrice": 139,
       "price": 89,
       "name": "conjunto de traje de baño de una pieza oaisis para mujer ,",
