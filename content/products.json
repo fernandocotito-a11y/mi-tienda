@@ -1,6 +1,32 @@
 {
   "products": [
     {
+      "oldPrice": 98,
+      "price": 79,
+      "name": "Conjunto de Traje de Baño Sexy para Mujer Swim Vcay de 3 Piezas con Top de Bikini Triangular",
+      "featured": false,
+      "sizes": [
+        "M"
+      ],
+      "soldOut": false,
+      "image": "/images/bikini-celeste-y-foores-y-brillo.jpg",
+      "description": "Conjunto de Traje de Baño Sexy para Mujer Swim Vcay de 3 Piezas con Top de Bikini Triangular con Cuello Halter, Lentejuelas Florales y Texturizado, Braguita con Lazo Lateral y Falda, Primavera/Verano\n",
+      "category": "Ropa"
+    },
+    {
+      "oldPrice": 89,
+      "price": 59,
+      "name": "conjunto de bikini de dos piezas rosado brillos",
+      "featured": false,
+      "sizes": [
+        "M"
+      ],
+      "soldOut": false,
+      "image": "/images/bokini-rosa-de-brillos.jpg",
+      "description": "conjunto de bikini de dos piezas  color rosa  con bordado premium, lentejuelas y brillo sexsy primavera verano",
+      "category": "Ropa"
+    },
+    {
       "oldPrice": 89,
       "price": 69,
       "name": " Conjunto de bikini de mujer azul",
