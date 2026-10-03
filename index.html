@@ -422,6 +422,17 @@
     return Math.round((1 - p.price / p.oldPrice) * 100);
   }
 
+  function productCode(p) {
+    const name = (p.name || "").trim();
+    let hash = 0;
+    for (let i = 0; i < name.length; i++) {
+      hash = ((hash << 5) - hash) + name.charCodeAt(i);
+      hash |= 0;
+    }
+    const hex = Math.abs(hash).toString(16).toUpperCase().padStart(6, "0");
+    return "COD" + hex.slice(0, 6);
+  }
+
   function shade(hex, pct) {
     const n = parseInt(hex.replace("#", ""), 16);
     let r = (n >> 16) & 255, g = (n >> 8) & 255, b = n & 255;
@@ -561,7 +572,7 @@
           ${p.soldOut ? `<div class="sold-overlay"><span>Agotado</span></div>` : `<button class="quick-add" onclick="event.stopPropagation();addToCart('${q(p.name)}')">Agregar al pedido</button>`}
         </div>
         <div class="card-body">
-          ${(p.category || p.code) ? `<div class="card-meta"><span class="category">${esc(p.category || "")}</span>${p.code ? `<span class="product-code">${esc(p.code)}</span>` : ""}</div>` : ""}
+          <div class="card-meta"><span class="category">${esc(p.category || "")}</span><span class="product-code">${productCode(p)}</span></div>
           <h3>${esc(p.name)}</h3>
           <div class="price-row">
             <div class="price">${money(p.price)}${p.oldPrice ? `<span class="old">${money(p.oldPrice)}</span>` : ""}</div>
@@ -658,7 +669,7 @@
     detailQty = 1;
     $("detailBody").innerHTML = `
       <img class="detail-img" src="${p.image || ''}" alt="${esc(p.name)}" onerror="this.onerror=null;this.src='https://placehold.co/600x750/f6efe6/1f2a33?text=${encodeURIComponent(p.name || 'Sin+imagen')}'">
-      ${(p.category || p.code) ? `<div class="card-meta"><span class="detail-cat">${esc(p.category || "")}</span>${p.code ? `<span class="product-code">${esc(p.code)}</span>` : ""}</div>` : ""}
+      <div class="card-meta"><span class="detail-cat">${esc(p.category || "")}</span><span class="product-code">${productCode(p)}</span></div>
       <h2 class="detail-name">${esc(p.name)}</h2>
       ${p.description ? `<p class="detail-desc">${esc(p.description)}</p>` : ""}
       ${p.sizes && p.sizes.length ? `<div class="detail-sizes"><span class="label">Talles disponibles:</span>${p.sizes.map(s => `<span class="size-chip">${esc(s)}</span>`).join("")}</div>` : ""}
@@ -741,7 +752,7 @@
     if (!name) { showToast("Escribe tu nombre y apellido"); return; }
     const proofInput = $("paymentProof");
     const proofFile = proofInput.files && proofInput.files[0];
-    const items = cart.map(x => `• ${x.code ? x.code + " · " : ""}${x.name} (x${x.qty}) — ${money(x.price * x.qty)}`).join("\n");
+    const items = cart.map(x => `• ${productCode(x)} · ${x.name} (x${x.qty}) — ${money(x.price * x.qty)}`).join("\n");
     const msg = `📦 *NUEVO PEDIDO — Mi Tienda Express*\n\n👤 *Cliente:* ${name}\n\n🛍️ *Productos:*\n${items}\n\n💰 *Total:* ${money(cartTotal())}\n\n🧾 Adjunto mi comprobante de pago.`;
 
     const done = () => { cart = []; updateCart(); closePay(); };
