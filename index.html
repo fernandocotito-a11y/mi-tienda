@@ -107,6 +107,17 @@
   .testimonial .avatar { width: 42px; height: 42px; border-radius: 50%; background: #f6efe6; display: grid; place-items: center; font-weight: 700; color: var(--accent); }
   .testimonial .who strong { display: block; font-size: 0.9rem; }
 
+  /* Preguntas frecuentes */
+  .faq { max-width: 760px; margin: 0 auto; }
+  .faq-item { background: var(--card); border: 1px solid var(--line); border-radius: 14px; margin-bottom: 12px; overflow: hidden; transition: border-color .2s; }
+  .faq-item.open { border-color: var(--accent); }
+  .faq-q { width: 100%; background: none; border: none; padding: 18px 20px; display: flex; justify-content: space-between; align-items: center; gap: 16px; cursor: pointer; font-family: inherit; font-size: 0.95rem; font-weight: 600; color: var(--ink); text-align: left; }
+  .faq-q .arrow { flex-shrink: 0; font-size: 1.4rem; font-weight: 400; color: var(--accent); line-height: 1; transition: transform .25s; }
+  .faq-item.open .faq-q .arrow { transform: rotate(45deg); }
+  .faq-a { max-height: 0; overflow: hidden; transition: max-height .3s ease; }
+  .faq-item.open .faq-a { max-height: 300px; }
+  .faq-a p { padding: 0 20px 18px; color: var(--ink-soft); font-size: 0.9rem; }
+
   /* Pago y contacto */
   .pay-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 24px; max-width: 760px; margin: 0 auto; }
   .pay-box { background: var(--card); border: 1px solid var(--line); border-radius: var(--radius); padding: 28px; text-align: center; box-shadow: var(--shadow); }
@@ -232,6 +243,7 @@
         <a href="#catalogo">Catálogo</a>
         <a href="#como">Cómo comprar</a>
         <a href="#opiniones">Opiniones</a>
+        <a href="#faq">Preguntas</a>
         <a href="#pago">Pago</a>
       </nav>
       <div class="nav-actions">
@@ -293,6 +305,16 @@
           <h2>Lo que dicen nuestras clientas</h2>
         </div>
         <div class="testimonials" id="testimonials"></div>
+      </div>
+    </section>
+
+    <section id="faq">
+      <div class="container">
+        <div class="section-head">
+          <span class="tag">FAQ</span>
+          <h2>Preguntas frecuentes</h2>
+        </div>
+        <div class="faq" id="faqList"></div>
       </div>
     </section>
 
@@ -376,7 +398,8 @@
       yapeName: "", yapeNumber: "", yapeQr: "", plinNumber: "", plinQr: ""
     },
     products: [],
-    testimonials: []
+    testimonials: [],
+    faqs: []
   };
 
   let CONTENT = null;
@@ -559,6 +582,26 @@
           <strong>${esc(x.name)}</strong>
         </div>
       </div>`).join("");
+  }
+
+  function renderFaq() {
+    const el = $("faqList");
+    const list = CONTENT.faqs || [];
+    if (!list.length) { el.innerHTML = ""; return; }
+    el.innerHTML = list.map(f => `
+      <div class="faq-item">
+        <button class="faq-q" onclick="toggleFaq(this)">
+          <span>${esc(f.question)}</span>
+          <span class="arrow">+</span>
+        </button>
+        <div class="faq-a"><p>${esc(f.answer)}</p></div>
+      </div>`).join("");
+  }
+
+  function toggleFaq(btn) {
+    const item = btn.closest(".faq-item");
+    if (!item) return;
+    item.classList.toggle("open");
   }
 
   /* Carrito */
@@ -745,10 +788,11 @@
   async function load() {
     CONTENT = JSON.parse(JSON.stringify(DEFAULT_CONTENT));
     try {
-      const [sr, pr, tr] = await Promise.all([
+      const [sr, pr, tr, fr] = await Promise.all([
         fetch("content/settings.json", { cache: "no-store" }),
         fetch("content/products.json", { cache: "no-store" }),
-        fetch("content/testimonials.json", { cache: "no-store" })
+        fetch("content/testimonials.json", { cache: "no-store" }),
+        fetch("content/faq.json", { cache: "no-store" })
       ]);
       if (sr.ok) {
         const s = await sr.json();
@@ -764,11 +808,17 @@
         const arr = Array.isArray(t) ? t : (t && t.testimonials);
         if (Array.isArray(arr)) CONTENT.testimonials = arr;
       }
+      if (fr.ok) {
+        const f = await fr.json();
+        const arr = Array.isArray(f) ? f : (f && f.faqs);
+        if (Array.isArray(arr)) CONTENT.faqs = arr;
+      }
     } catch (e) {}
     applySettings();
     renderFilters();
     renderProducts();
     renderTestimonials();
+    renderFaq();
     updateCart();
   }
 

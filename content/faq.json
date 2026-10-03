@@ -1,0 +1,28 @@
+{
+  "faqs": [
+    {
+      "question": "¿Hacen envíos a todo el país?",
+      "answer": "Sí, realizamos envíos a todo el Perú. Coordinamos la dirección y el costo del envío directamente por WhatsApp."
+    },
+    {
+      "question": "¿Cómo puedo pagar?",
+      "answer": "Aceptamos Yape y Plin. Escanea el código QR o copia el número, realiza el pago y envíanos tu comprobante por WhatsApp para confirmar tu pedido."
+    },
+    {
+      "question": "¿Puedo devolver o cambiar un producto?",
+      "answer": "Sí, aceptamos cambios dentro de los 7 días posteriores a la entrega, siempre que el producto esté sin usar y con su etiqueta original."
+    },
+    {
+      "question": "¿Cuánto tarda el envío?",
+      "answer": "En Lima el envío suele tardar de 24 a 48 horas. A provincia puede tomar de 2 a 5 días según la agencia de envío."
+    },
+    {
+      "question": "¿Los productos son iguales a las fotos?",
+      "answer": "Sí, todas las fotos son reales de nuestros productos. Ten en cuenta que los colores pueden variar ligeramente según la pantalla de tu dispositivo."
+    },
+    {
+      "question": "¿Cómo sé qué talla elegir?",
+      "answer": "Revisa las tallas disponibles en cada producto. Si tienes dudas, escríbenos por WhatsApp y te ayudamos a elegir la talla ideal según tus medidas."
+    }
+  ]
+}
