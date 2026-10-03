@@ -28,6 +28,7 @@ collections:
             summary: "{{fields.name}} — {{fields.price}}"
             fields:
               - { label: "Nombre", name: "name", widget: "string", hint: "Cómo se llama el producto. Ej: Vestido Floral" }
+              - { label: "Código", name: "code", widget: "string", required: false, hint: "Código para identificar el producto en los pedidos. Ej: COD018. Mantén la numeración (COD018, COD019, COD020...)" }
               - { label: "Foto", name: "image", widget: "image", hint: "Sube la foto del producto" }
               - { label: "Precio", name: "price", widget: "number", value_type: "float", hint: "Solo el número, sin símbolo. Ej: 89.90" }
               - { label: "Precio anterior (oferta)", name: "oldPrice", widget: "number", value_type: "float", required: false, hint: "Opcional. Se muestra tachado junto al precio" }
