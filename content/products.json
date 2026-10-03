@@ -1,14 +1,17 @@
 {
   "products": [
     {
-      "category": "Ropa",
-      "soldOut": false,
-      "featured": false,
-      "image": "/images/bikini-amarillo-3-piezas.jpg",
-      "name": "conjunto de 3 piezas para mujer, nuevo estilo de verano",
-      "description": "conjunto de 3 piezas para mujer, nuevo estilo de verano, elegante , retro, sexy y romántico y minifalda de playa ",
+      "oldPrice": 119,
       "price": 89,
-      "oldPrice": 119
+      "name": "conjunto de 3 piezas para mujer, nuevo estilo de verano",
+      "featured": false,
+      "sizes": [
+        "M"
+      ],
+      "soldOut": false,
+      "image": "/images/bikini-amarillo-3-piezas.jpg",
+      "description": "conjunto de 3 piezas para mujer, nuevo estilo de verano, elegante , retro, sexy y romántico y minifalda de playa ",
+      "category": "Ropa"
     },
     {
       "oldPrice": 119,
