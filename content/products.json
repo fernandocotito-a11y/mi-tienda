@@ -1,6 +1,19 @@
 {
   "products": [
     {
+      "oldPrice": 139,
+      "price": 89,
+      "name": "conjunto de traje de baño de una pieza oaisis para mujer ,",
+      "featured": false,
+      "sizes": [
+        "M"
+      ],
+      "soldOut": false,
+      "image": "/images/bikini-enteriso-marron-y-tul.jpg",
+      "description": "diseño de cuello en v marron oscuro, cintura de cuerda hecha a mano, cintura de cuerda hecha a mano, con falda maxi de abertura cruzada ",
+      "category": "Ropa"
+    },
+    {
       "oldPrice": 89,
       "price": 49,
       "name": "pantalón de playa ",
