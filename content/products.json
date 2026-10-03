@@ -4,6 +4,26 @@
       "category": "Ropa",
       "soldOut": false,
       "featured": false,
+      "image": "/images/gemini_generated_image_ebf951ebf951ebf9.jpg",
+      "name": " Conjunto de bikini de triángulo de unicolor para mujer,",
+      "description": " Conjunto de bikini de triángulo de unicolor para mujer, traje de baño sexy de 2 piezas con cordones y contraste de color, conjunto de bikinis para mujer, traje de baño marrón para playa, bikini de tiras laterales marrón para vacaciones, bikini triangular para mujer, conjuntos de bikini para mujer, trajes de baño para mujer",
+      "price": 59,
+      "oldPrice": 67
+    },
+    {
+      "category": "Ropa",
+      "soldOut": false,
+      "featured": false,
+      "image": "/images/bikini-dotado.jpg",
+      "name": " Conjunto de Bikini de 2 Piezas con Textura de Lentejuelas y Halter, Traje de Baño Sexy Dorado",
+      "description": "Conjunto de Bikini de 2 Piezas con Textura de Lentejuelas y Halter, Traje de Baño Sexy Dorado",
+      "price": 69,
+      "oldPrice": 99
+    },
+    {
+      "category": "Ropa",
+      "soldOut": false,
+      "featured": false,
       "image": "/images/bikini-blanco.jpg",
       "name": "Traje de Baño Bikini Sexy de 2 Piezas para Mujer,",
       "price": 69,
