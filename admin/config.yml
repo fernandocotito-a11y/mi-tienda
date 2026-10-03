@@ -32,6 +32,7 @@ collections:
               - { label: "Precio", name: "price", widget: "number", value_type: "float", hint: "Solo el número, sin símbolo. Ej: 89.90" }
               - { label: "Precio anterior (oferta)", name: "oldPrice", widget: "number", value_type: "float", required: false, hint: "Opcional. Se muestra tachado junto al precio" }
               - { label: "Categoría", name: "category", widget: "select", options: ["Ropa", "Accesorios", "Calzado", "Otros"], default: "Ropa", hint: "Elige la categoría (sirve para los filtros de la tienda)" }
+              - { label: "Tallas disponibles", name: "sizes", widget: "select", multiple: true, options: ["S", "M", "L", "XL"], required: false, hint: "Solo aparece en ropa. Marca las tallas que tienes en stock", condition: { field: "category", value: "Ropa" } }
               - { label: "Descripción", name: "description", widget: "text", required: false }
               - { label: "Agotado", name: "soldOut", widget: "boolean", default: false, hint: "Marca si no hay stock disponible" }
               - { label: "Destacado (etiqueta 'Nuevo')", name: "featured", widget: "boolean", default: false, hint: "Muestra la etiqueta 'Nuevo' en el producto" }

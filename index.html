@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<title>Tienda</title>
+<title>Mi Tienda Express</title>
 <meta name="description" content="Tienda online de productos seleccionados a mano." />
 <link rel="preconnect" href="https://fonts.googleapis.com" />
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
@@ -75,6 +75,7 @@
   .card-media img { width: 100%; height: 100%; object-fit: cover; transition: transform .5s ease; }
   .card:hover .card-media img { transform: scale(1.06); }
   .badge { position: absolute; top: 14px; left: 14px; font-size: 0.7rem; font-weight: 700; letter-spacing: 0.5px; text-transform: uppercase; padding: 5px 12px; border-radius: 20px; color: #fff; background: var(--accent); }
+  .discount-badge { position: absolute; top: 12px; right: 12px; width: 44px; height: 44px; border-radius: 50%; background: #e74c3c; color: #fff; display: grid; place-items: center; font-size: 0.78rem; font-weight: 700; box-shadow: 0 4px 12px rgba(0,0,0,0.25); }
   .sold-overlay { position: absolute; inset: 0; background: rgba(31,42,51,0.55); display: grid; place-items: center; }
   .sold-overlay span { background: #9aa3ab; color: #fff; font-size: 0.8rem; font-weight: 700; letter-spacing: 1px; text-transform: uppercase; padding: 8px 18px; border-radius: 30px; }
   .quick-add { position: absolute; bottom: 14px; left: 14px; right: 14px; background: rgba(31,42,51,0.9); color: #fff; border: none; padding: 12px; border-radius: 30px; font-weight: 600; font-size: 0.85rem; cursor: pointer; opacity: 0; transform: translateY(10px); transition: all .25s; }
@@ -171,6 +172,9 @@
   .detail-cat { font-size: 0.72rem; letter-spacing: 1px; text-transform: uppercase; color: var(--ink-soft); }
   .detail-name { font-family: "Playfair Display", serif; font-size: 1.5rem; line-height: 1.2; margin: 6px 0; }
   .detail-desc { color: var(--ink-soft); font-size: 0.92rem; margin-bottom: 16px; }
+  .detail-sizes { margin: 14px 0; }
+  .detail-sizes .label { display: block; font-size: 0.85rem; font-weight: 600; color: var(--ink-soft); margin-bottom: 8px; }
+  .size-chip { display: inline-block; min-width: 38px; padding: 6px 12px; border: 1px solid var(--line); border-radius: 8px; text-align: center; font-weight: 600; font-size: 0.85rem; margin: 0 6px 6px 0; }
   .detail-price { font-size: 1.5rem; font-weight: 700; }
   .detail-price .old { font-size: 1rem; color: #b0b6bc; text-decoration: line-through; font-weight: 400; margin-left: 8px; }
   .detail-qty { display: flex; align-items: center; gap: 14px; margin: 16px 0; }
@@ -359,7 +363,7 @@
 <script>
   const DEFAULT_CONTENT = {
     settings: {
-      title: "Tu Tienda", logo: "", logoHeight: 46, tagline: "", announcement: "",
+      title: "Mi Tienda Express", logo: "", logoHeight: 46, tagline: "", announcement: "",
       primaryColor: "#ff6f61", backgroundColor: "#fcf8f2", backgroundImage: "",
       currency: "S/", whatsapp: "", instagram: "", email: "", heroImage: "", footerText: "",
       yapeName: "", yapeNumber: "", yapeQr: "", plinNumber: "", plinQr: ""
@@ -379,6 +383,11 @@
   function money(n) {
     const c = (CONTENT.settings.currency || "").trim();
     return c + Number(n).toFixed(2).replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+  }
+
+  function discount(p) {
+    if (!p.oldPrice || !p.price || p.oldPrice <= p.price) return 0;
+    return Math.round((1 - p.price / p.oldPrice) * 100);
   }
 
   function shade(hex, pct) {
@@ -516,6 +525,7 @@
         <div class="card-media">
           <img src="${p.image || ''}" alt="${esc(p.name)}" loading="lazy" onerror="this.onerror=null;this.src='https://placehold.co/600x750/f6efe6/1f2a33?text=${encodeURIComponent(p.name || 'Sin+imagen')}'">
           ${p.featured && !p.soldOut ? `<span class="badge">Nuevo</span>` : ""}
+          ${discount(p) > 0 ? `<span class="discount-badge">-${discount(p)}%</span>` : ""}
           ${p.soldOut ? `<div class="sold-overlay"><span>Agotado</span></div>` : `<button class="quick-add" onclick="event.stopPropagation();addToCart('${q(p.name)}')">Agregar al pedido</button>`}
         </div>
         <div class="card-body">
@@ -599,6 +609,7 @@
       ${p.category ? `<span class="detail-cat">${esc(p.category)}</span>` : ""}
       <h2 class="detail-name">${esc(p.name)}</h2>
       ${p.description ? `<p class="detail-desc">${esc(p.description)}</p>` : ""}
+      ${p.sizes && p.sizes.length ? `<div class="detail-sizes"><span class="label">Talles disponibles:</span>${p.sizes.map(s => `<span class="size-chip">${esc(s)}</span>`).join("")}</div>` : ""}
       <div class="detail-price">${money(p.price)}${p.oldPrice ? `<span class="old">${money(p.oldPrice)}</span>` : ""}</div>
       ${p.soldOut ? `<p style="color:#c0392b;font-weight:600;margin-top:12px;">Producto agotado</p>` : `
         <div class="detail-qty">
