@@ -195,6 +195,13 @@
   .pay-method .pay-brand { font-weight: 800; font-size: 1.1rem; margin-bottom: 4px; }
   .pay-method .num { font-weight: 600; font-size: 0.95rem; }
   .pay-method .holder { font-size: 0.78rem; color: var(--ink-soft); margin-bottom: 8px; }
+  .customer-form { margin-bottom: 16px; }
+  .customer-form label { display: block; font-size: 0.82rem; font-weight: 600; color: var(--ink-soft); margin: 10px 0 6px; }
+  .customer-form input[type=text] { width: 100%; border: 1px solid var(--line); border-radius: 10px; padding: 11px 14px; font-family: inherit; font-size: 0.9rem; }
+  .customer-form input[type=text]:focus { outline: none; border-color: var(--accent); }
+  .customer-form input[type=file] { width: 100%; font-size: 0.85rem; color: var(--ink-soft); }
+  .proof-preview { margin-top: 8px; }
+  .proof-preview img { max-width: 100%; max-height: 140px; border-radius: 8px; border: 1px solid var(--line); }
 
   /* Flotante WhatsApp */
   .float-wa { position: fixed; right: 22px; bottom: 22px; z-index: 240; width: 58px; height: 58px; border-radius: 50%; background: var(--wa); display: grid; place-items: center; box-shadow: 0 10px 26px rgba(37,211,102,0.45); transition: transform .2s; animation: pulse 2.2s infinite; }
@@ -667,7 +674,14 @@
         ${items}
         <div class="total"><span>Total a pagar</span><span>${money(cartTotal())}</span></div>
       </div>
-      ${methods.length ? `<div class="pay-methods">${methods.join("")}</div><p style="font-size:0.85rem;color:var(--ink-soft);margin-bottom:16px;">Escanea el QR o copia el número. Luego envíanos tu comprobante.</p>` : `<p style="font-size:0.88rem;color:var(--ink-soft);margin-bottom:16px;">Coordina el pago directamente por WhatsApp.</p>`}
+      ${methods.length ? `<div class="pay-methods">${methods.join("")}</div><p style="font-size:0.85rem;color:var(--ink-soft);margin-bottom:16px;">Escanea el QR o copia el número. Luego completa tus datos y sube tu comprobante.</p>` : `<p style="font-size:0.88rem;color:var(--ink-soft);margin-bottom:16px;">Coordina el pago directamente por WhatsApp.</p>`}
+      <div class="customer-form">
+        <label>Tu nombre y apellido *</label>
+        <input type="text" id="customerName" placeholder="Ej: María Pérez" />
+        <label>Foto del comprobante de pago (Yape/Plin)</label>
+        <input type="file" id="paymentProof" accept="image/*" onchange="previewProof(this)" />
+        <div class="proof-preview" id="proofPreview"></div>
+      </div>
       <button class="btn btn-wa" style="width:100%;" onclick="confirmOrder()">Ya pagué — enviar pedido por WhatsApp</button>
     `;
     $("payBackdrop").classList.add("show");
@@ -678,12 +692,37 @@
     $("payModal").classList.remove("show");
   }
   function confirmOrder() {
-    const items = cart.map(x => `${x.name} x${x.qty}`).join(", ");
-    const msg = encodeURIComponent(`Hola! Ya hice mi pago. Mi pedido: ${items} — Total: ${money(cartTotal())}. Te envío el comprobante.`);
-    window.open(`https://wa.me/${CONTENT.settings.whatsapp}?text=${msg}`, "_blank");
-    cart = [];
-    updateCart();
-    closePay();
+    const name = $("customerName").value.trim();
+    if (!name) { showToast("Escribe tu nombre y apellido"); return; }
+    const proofInput = $("paymentProof");
+    const proofFile = proofInput.files && proofInput.files[0];
+    const items = cart.map(x => `• ${x.name} (x${x.qty}) — ${money(x.price * x.qty)}`).join("\n");
+    const msg = `📦 *NUEVO PEDIDO — Mi Tienda Express*\n\n👤 *Cliente:* ${name}\n\n🛍️ *Productos:*\n${items}\n\n💰 *Total:* ${money(cartTotal())}\n\n🧾 Adjunto mi comprobante de pago.`;
+
+    const done = () => { cart = []; updateCart(); closePay(); };
+
+    if (proofFile && navigator.canShare && navigator.canShare({ files: [proofFile] })) {
+      navigator.share({ files: [proofFile], text: msg, title: "Pedido Mi Tienda Express" })
+        .then(done)
+        .catch(() => showToast("Envío cancelado"));
+    } else {
+      window.open(`https://wa.me/${CONTENT.settings.whatsapp}?text=${encodeURIComponent(msg)}`, "_blank");
+      done();
+    }
+  }
+
+  function previewProof(input) {
+    const file = input.files && input.files[0];
+    const box = $("proofPreview");
+    if (!file) { box.innerHTML = ""; return; }
+    if (file.type && file.type.startsWith("image/")) {
+      const reader = new FileReader();
+      reader.onload = e => { box.innerHTML = `<img src="${e.target.result}" alt="Comprobante">`; };
+      reader.readAsDataURL(file);
+    } else {
+      box.innerHTML = "";
+      showToast("Por favor sube una imagen");
+    }
   }
 
   function copyText(txt) {
