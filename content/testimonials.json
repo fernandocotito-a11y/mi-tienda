@@ -2,8 +2,18 @@
   "testimonials": [
     {
       "rating": 5,
-      "name": "Noelia",
-      "text": "Me gusta los productos que venden"
+      "text": "La página es súper fácil de usar. Encontré lo que buscaba en segundos, el catálogo está bien organizado y pagar con Plin me facilitó la vida. Excelente experiencia de compra de principio a fin.",
+      "name": "Sofia T."
+    },
+    {
+      "rating": 4,
+      "text": "Tenía miedo de comprar ropa de baño por internet porque nunca me quedan bien, pero el fit de estos modelos es increíble. La tela es gruesa, no transparenta nada y horma perfecto. ¡Ya quiero pedir otro color!",
+      "name": "Valeria R."
+    },
+    {
+      "rating": 5,
+      "name": "Andrea C.",
+      "text": "¡Me salvaron el fin de semana! Pedí mi bikini el viernes, pagué al toque con Yape y el sábado en la mañana ya estaba en mi casa. Súper rápido, seguro y la calidad es A1."
     }
   ]
 }
