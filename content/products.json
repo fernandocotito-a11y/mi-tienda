@@ -2,6 +2,19 @@
   "products": [
     {
       "oldPrice": 129,
+      "price": 98,
+      "name": "3 piezas / set traje de baño bikini de mujer",
+      "featured": false,
+      "sizes": [
+        "M"
+      ],
+      "soldOut": false,
+      "image": "/images/bikini-3-piezas-fucsia.jpg",
+      "description": "3 piezas / set traje de baño bikini de mujer con tirantes de cuerda degradados y chal, conjunto de cobertura de playa para verano ",
+      "category": "Ropa"
+    },
+    {
+      "oldPrice": 129,
       "price": 99,
       "name": "nuevo conjunto de 2 piezas rosa",
       "featured": false,
