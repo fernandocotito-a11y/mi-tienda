@@ -1,174 +1,225 @@
 {
   "products": [
     {
-      "category": "Ropa",
-      "soldOut": false,
-      "featured": false,
-      "image": "/images/bikini-azul.jpg",
-      "name": " Conjunto de bikini de mujer azul",
-      "description": " Conjunto de bikini de mujer nuevo de unicolor con copa triangular, traje de baño de dos piezas sexy con lazo para vacaciones de verano en la playa",
-      "price": 69,
-      "oldPrice": 89
-    },
-    {
-      "category": "Ropa",
-      "soldOut": false,
-      "featured": false,
-      "image": "/images/gemini_generated_image_ebf951ebf951ebf9.jpg",
-      "name": " Conjunto de bikini de triángulo de unicolor para mujer,",
-      "description": " Conjunto de bikini de triángulo de unicolor para mujer, traje de baño sexy de 2 piezas con cordones y contraste de color, conjunto de bikinis para mujer, traje de baño marrón para playa, bikini de tiras laterales marrón para vacaciones, bikini triangular para mujer, conjuntos de bikini para mujer, trajes de baño para mujer",
-      "price": 69,
-      "oldPrice": 89
-    },
-    {
-      "category": "Ropa",
-      "soldOut": false,
-      "featured": false,
-      "image": "/images/bikini-dotado.jpg",
-      "name": " Conjunto de Bikini de 2 Piezas con Textura de Lentejuelas y Halter, Traje de Baño Sexy Dorado",
-      "description": "Conjunto de Bikini de 2 Piezas con Textura de Lentejuelas y Halter, Traje de Baño Sexy Dorado",
-      "price": 69,
-      "oldPrice": 99
-    },
-    {
-      "category": "Ropa",
-      "soldOut": false,
-      "featured": false,
-      "image": "/images/bikini-blanco.jpg",
-      "name": "Traje de Baño Bikini Sexy de 2 Piezas para Mujer,",
-      "price": 69,
-      "oldPrice": 80,
-      "description": "Traje de Baño Bikini Sexy de 2 Piezas para Mujer, Tanga Metálico, Ropa de Baño para Vacaciones en la Playa Adecuada para Escapadas a la Playa y Fiestas de Natación"
-    },
-    {
-      "category": "Ropa",
-      "soldOut": false,
-      "featured": false,
-      "image": "/images/enteriso-blanco.jpg",
-      "name": "Cubierta de Hombro Descubierto Blanca",
-      "price": 39,
-      "oldPrice": 49.9,
-      "description": "Cubierta de Hombro Descubierto Blanca y Moderna para Mujeres, Estilo Vacacional en la Playa"
-    },
-    {
-      "category": "Accesorios",
-      "soldOut": false,
-      "featured": false,
-      "name": "Cinturón de cintas de cuentas sexy ",
-      "image": "/images/cadena-de-barriga.jpg",
-      "price": 9.9,
-      "oldPrice": 15.9,
-      "description": "cadena"
-    },
-    {
-      "category": "Ropa",
-      "soldOut": false,
-      "featured": false,
-      "name": "Nuevo conjunto de bikini de 3 piezas ",
-      "image": "/images/bikini-marron-con-uma-flor.jpg",
-      "price": 59,
       "oldPrice": 89,
-      "description": "Nuevo conjunto de bikini de 3 piezas con abertura para mujer con decoración floral de alta gama para vacaciones en la playa y traje de baño para aguas termales"
-    },
-    {
-      "category": "Ropa",
-      "soldOut": false,
-      "featured": false,
-      "image": "/images/bikini-mattrro-transparente.jpg",
-      "name": "Conjunto de bikini de tres piezas sexy de malla separada",
       "price": 69,
-      "oldPrice": 87,
-      "description": "Nuevo conjunto de bikini de 3 piezas con abertura para mujer con decoración floral de alta gama para vacaciones en la playa y traje de baño para aguas termales"
+      "name": " Conjunto de bikini de mujer azul",
+      "featured": false,
+      "sizes": [
+        "M"
+      ],
+      "soldOut": false,
+      "image": "/images/bikini-azul.jpg",
+      "description": " Conjunto de bikini de mujer nuevo de unicolor con copa triangular, traje de baño de dos piezas sexy con lazo para vacaciones de verano en la playa",
+      "category": "Ropa"
     },
     {
-      "category": "Ropa",
-      "soldOut": false,
-      "featured": false,
-      "name": "Conjunto de bikini de playa para mujer 2026",
-      "image": "/images/bikini-brillo-marron.jpg",
-      "price": 79,
-      "oldPrice": 99,
-      "description": "Conjunto de bikini de playa para mujer 2026"
-    },
-    {
-      "category": "Ropa",
-      "soldOut": false,
-      "featured": false,
-      "name": "Nuevo Bikini de Tela Especial ",
-      "image": "/images/bikini-eoropeo.jpg",
+      "oldPrice": 89,
       "price": 69,
+      "name": " Conjunto de bikini de triángulo de unicolor para mujer,",
+      "featured": false,
+      "sizes": [
+        "M"
+      ],
+      "soldOut": false,
+      "image": "/images/gemini_generated_image_ebf951ebf951ebf9.jpg",
+      "description": " Conjunto de bikini de triángulo de unicolor para mujer, traje de baño sexy de 2 piezas con cordones y contraste de color, conjunto de bikinis para mujer, traje de baño marrón para playa, bikini de tiras laterales marrón para vacaciones, bikini triangular para mujer, conjuntos de bikini para mujer, trajes de baño para mujer",
+      "category": "Ropa"
+    },
+    {
       "oldPrice": 99,
-      "description": "Bikini iridiscente con copas de concha y detalles de perlas. Un look de sirena elegante para el verano."
+      "price": 69,
+      "name": " Conjunto de Bikini de 2 Piezas con Textura de Lentejuelas y Halter, Traje de Baño Sexy Dorado",
+      "featured": false,
+      "sizes": [
+        "M"
+      ],
+      "soldOut": false,
+      "image": "/images/bikini-dotado.jpg",
+      "description": "Conjunto de Bikini de 2 Piezas con Textura de Lentejuelas y Halter, Traje de Baño Sexy Dorado",
+      "category": "Ropa"
     },
     {
-      "category": "Ropa",
-      "soldOut": false,
+      "oldPrice": 80,
+      "price": 69,
+      "name": "Traje de Baño Bikini Sexy de 2 Piezas para Mujer,",
       "featured": false,
-      "name": "Conjunto de bikini elegante",
-      "image": "/images/bikini-elegante.jpg",
-      "price": 99,
-      "oldPrice": 118,
-      "description": "Conjunto de bikini elegante y de Jacquard con tirantes de la nuca y parte inferior ligera estilo chifón"
+      "sizes": [
+        "M"
+      ],
+      "soldOut": false,
+      "image": "/images/bikini-blanco.jpg",
+      "description": "Traje de Baño Bikini Sexy de 2 Piezas para Mujer, Tanga Metálico, Ropa de Baño para Vacaciones en la Playa Adecuada para Escapadas a la Playa y Fiestas de Natación",
+      "category": "Ropa"
     },
     {
-      "category": "Ropa",
-      "soldOut": false,
+      "oldPrice": 49.9,
+      "price": 39,
+      "name": "Cubierta de Hombro Descubierto Blanca",
       "featured": false,
-      "name": "Conjunto de bikini con falda ",
-      "description": "Conjunto de bikini con falda de color sólido para el Día de San Valentín, 3 piezas, tirantes anchos y diseño con aros que proporcionan un soporte cómodo para mujeres, creando un look de playa moderno, perfecto para fiestas de verano en la playa y la piscina",
-      "image": "/images/f4c9f0f2-ce22-4856-8183-7b7b9c74d510.jpg",
-      "price": 56,
-      "oldPrice": 89
+      "sizes": [
+        "M"
+      ],
+      "soldOut": false,
+      "image": "/images/enteriso-blanco.jpg",
+      "description": "Cubierta de Hombro Descubierto Blanca y Moderna para Mujeres, Estilo Vacacional en la Playa",
+      "category": "Ropa"
     },
     {
-      "category": "Ropa",
-      "soldOut": false,
+      "oldPrice": 15.9,
+      "price": 9.9,
+      "name": "Cinturón de cintas de cuentas sexy ",
       "featured": false,
-      "name": "Conjunto de baño de 3 piezas ",
-      "description": "Conjunto de baño de 3 piezas para mujer de verano 2026, con estampado vintage, falda de playa con abertura larga y lazo",
-      "image": "/images/bikini-arcoiris-crema-y-marron.jpg",
-      "price": 99,
-      "oldPrice": 137
+      "sizes": [
+        "M"
+      ],
+      "soldOut": false,
+      "image": "/images/cadena-de-barriga.jpg",
+      "description": "cadena",
+      "category": "Accesorios"
     },
     {
-      "category": "Ropa",
-      "soldOut": false,
-      "featured": false,
-      "name": "Traje de baño beige fruncido de 1 pieza",
-      "description": "Traje de baño beige fruncido de 1 pieza, diseño de bustier con efecto push-up para playa y vacaciones al atardecer",
+      "oldPrice": 89,
       "price": 59,
-      "oldPrice": 69,
-      "image": "/images/bikini-enteriso-1.jpg"
-    },
-    {
-      "category": "Ropa",
-      "soldOut": false,
+      "name": "Nuevo conjunto de bikini de 3 piezas ",
       "featured": false,
+      "sizes": [
+        "M"
+      ],
+      "soldOut": false,
+      "image": "/images/bikini-marron-con-uma-flor.jpg",
+      "description": "Nuevo conjunto de bikini de 3 piezas con abertura para mujer con decoración floral de alta gama para vacaciones en la playa y traje de baño para aguas termales",
+      "category": "Ropa"
+    },
+    {
+      "oldPrice": 87,
+      "price": 69,
+      "name": "Conjunto de bikini de tres piezas sexy de malla separada",
+      "featured": false,
+      "sizes": [
+        "M"
+      ],
+      "soldOut": false,
+      "image": "/images/bikini-mattrro-transparente.jpg",
+      "description": "Nuevo conjunto de bikini de 3 piezas con abertura para mujer con decoración floral de alta gama para vacaciones en la playa y traje de baño para aguas termales",
+      "category": "Ropa"
+    },
+    {
+      "oldPrice": 99,
+      "price": 79,
+      "name": "Conjunto de bikini de playa para mujer 2026",
+      "featured": false,
+      "sizes": [
+        "M"
+      ],
+      "soldOut": false,
+      "image": "/images/bikini-brillo-marron.jpg",
+      "description": "Conjunto de bikini de playa para mujer 2026",
+      "category": "Ropa"
+    },
+    {
+      "oldPrice": 99,
+      "price": 69,
+      "name": "Nuevo Bikini de Tela Especial ",
+      "featured": false,
+      "sizes": [
+        "M"
+      ],
+      "soldOut": false,
+      "image": "/images/bikini-eoropeo.jpg",
+      "description": "Bikini iridiscente con copas de concha y detalles de perlas. Un look de sirena elegante para el verano.",
+      "category": "Ropa"
+    },
+    {
+      "oldPrice": 118,
+      "price": 99,
+      "name": "Conjunto de bikini elegante",
+      "featured": false,
+      "sizes": [
+        "M"
+      ],
+      "soldOut": false,
+      "image": "/images/bikini-elegante.jpg",
+      "description": "Conjunto de bikini elegante y de Jacquard con tirantes de la nuca y parte inferior ligera estilo chifón",
+      "category": "Ropa"
+    },
+    {
+      "oldPrice": 89,
+      "price": 56,
+      "name": "Conjunto de bikini con falda ",
+      "featured": false,
+      "sizes": [
+        "M"
+      ],
+      "soldOut": false,
+      "image": "/images/f4c9f0f2-ce22-4856-8183-7b7b9c74d510.jpg",
+      "description": "Conjunto de bikini con falda de color sólido para el Día de San Valentín, 3 piezas, tirantes anchos y diseño con aros que proporcionan un soporte cómodo para mujeres, creando un look de playa moderno, perfecto para fiestas de verano en la playa y la piscina",
+      "category": "Ropa"
+    },
+    {
+      "oldPrice": 137,
+      "price": 99,
+      "name": "Conjunto de baño de 3 piezas ",
+      "featured": false,
+      "sizes": [
+        "M"
+      ],
+      "soldOut": false,
+      "image": "/images/bikini-arcoiris-crema-y-marron.jpg",
+      "description": "Conjunto de baño de 3 piezas para mujer de verano 2026, con estampado vintage, falda de playa con abertura larga y lazo",
+      "category": "Ropa"
+    },
+    {
+      "oldPrice": 69,
+      "price": 59,
+      "name": "Traje de baño beige fruncido de 1 pieza",
+      "featured": false,
+      "sizes": [
+        "M"
+      ],
+      "soldOut": false,
+      "image": "/images/bikini-enteriso-1.jpg",
+      "description": "Traje de baño beige fruncido de 1 pieza, diseño de bustier con efecto push-up para playa y vacaciones al atardecer",
+      "category": "Ropa"
+    },
+    {
+      "oldPrice": 149.9,
+      "price": 99.9,
       "name": " Traje de baño de verano para mujer",
+      "featured": false,
+      "sizes": [
+        "M"
+      ],
+      "soldOut": false,
       "image": "/images/bikini-tirante.jpg",
-      "price": 99.9,
-      "oldPrice": 149.9,
-      "description": "Traje de baño de verano para mujer, top de bikini sin tirantes con purpurina color caqui y falda con abertura alta y torsada, conjunto de playa/resort de 3 piezas\n"
+      "description": "Traje de baño de verano para mujer, top de bikini sin tirantes con purpurina color caqui y falda con abertura alta y torsada, conjunto de playa/resort de 3 piezas\n",
+      "category": "Ropa"
     },
     {
-      "category": "Ropa",
-      "soldOut": false,
-      "featured": true,
-      "name": "Conjunto de bikini de 3 piezas ",
-      "image": "/images/pieza-de-tres-piezas-negro.jpg",
-      "price": 99.9,
       "oldPrice": 139.9,
-      "description": "Conjunto de bikini de 3 piezas para mujer para vacaciones con falda cubrebañador, falda de playa con abertura, traje de baño de vacaciones que favorece la figura"
+      "price": 99.9,
+      "name": "Conjunto de bikini de 3 piezas ",
+      "featured": true,
+      "sizes": [
+        "M"
+      ],
+      "soldOut": false,
+      "image": "/images/pieza-de-tres-piezas-negro.jpg",
+      "description": "Conjunto de bikini de 3 piezas para mujer para vacaciones con falda cubrebañador, falda de playa con abertura, traje de baño de vacaciones que favorece la figura",
+      "category": "Ropa"
     },
     {
-      "category": "Ropa",
-      "soldOut": false,
-      "featured": true,
-      "description": "Vestido Maxi de Sirena con Tirantes Finos, Cintura Hueca, Diseño Floral con Lienzo de Puntos en Degradado Rojo Rosa, Decoración de Estrellas de Mar, Ajustado y Fruncido, Ideal para Vacaciones en la Playa",
-      "name": "Vestido Maxi de Sirena",
-      "image": "/images/bikini-maxi-sirena.jpg",
       "oldPrice": 149.9,
-      "price": 79.9
+      "price": 79.9,
+      "name": "Vestido Maxi de Sirena",
+      "featured": true,
+      "sizes": [
+        "M"
+      ],
+      "soldOut": false,
+      "image": "/images/bikini-maxi-sirena.jpg",
+      "description": "Vestido Maxi de Sirena con Tirantes Finos, Cintura Hueca, Diseño Floral con Lienzo de Puntos en Degradado Rojo Rosa, Decoración de Estrellas de Mar, Ajustado y Fruncido, Ideal para Vacaciones en la Playa",
+      "category": "Ropa"
     }
   ]
 }
