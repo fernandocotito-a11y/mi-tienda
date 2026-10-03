@@ -1,6 +1,32 @@
 {
   "products": [
     {
+      "oldPrice": 89,
+      "price": 49,
+      "name": "pantalón de playa ",
+      "featured": false,
+      "sizes": [
+        "M"
+      ],
+      "soldOut": false,
+      "image": "/images/pantalon-rallas.jpg",
+      "description": "pantalón de playa cintura baja y pierna ancha",
+      "category": "Ropa"
+    },
+    {
+      "oldPrice": 134,
+      "price": 99,
+      "name": "conjunto de 3 piezas ",
+      "featured": false,
+      "sizes": [
+        "M"
+      ],
+      "soldOut": false,
+      "image": "/images/bikini-lindias-marron-y-negro-msraamoleado.jpg",
+      "description": "top de bikini con estampado  rayas color cafe con relleno removible y aro ",
+      "category": "Ropa"
+    },
+    {
       "oldPrice": 99,
       "price": 79,
       "name": "bikini color azul marino de trez piezas ",
