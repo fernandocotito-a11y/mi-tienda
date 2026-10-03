@@ -1,6 +1,19 @@
 {
   "products": [
     {
+      "oldPrice": 99,
+      "price": 89,
+      "name": "vestido mini ajustado con escote de corazon",
+      "featured": false,
+      "sizes": [
+        "M"
+      ],
+      "soldOut": false,
+      "image": "/images/vestido-tejido.jpg",
+      "description": "estilo boho ibicenco, lindo y sexy, para cubrir el traje de baño en vacaciones ",
+      "category": "Ropa"
+    },
+    {
       "oldPrice": 119,
       "price": 89,
       "name": "conjunto de 3 piezas para mujer, nuevo estilo de verano",
