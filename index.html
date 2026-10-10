@@ -44,10 +44,10 @@
   .cart-btn:hover { background: var(--accent); transform: translateY(-2px); }
   .cart-count { position: absolute; top: -4px; right: -4px; background: var(--accent); color: #fff; font-size: 0.7rem; font-weight: 700; min-width: 20px; height: 20px; border-radius: 20px; display: grid; place-items: center; padding: 0 5px; }
 
-  .hero { position: relative; min-height: 60vh; display: flex; align-items: center; background-size: cover; background-position: center; background-repeat: no-repeat; color: #fff; border-radius: 0 0 40px 40px; overflow: hidden; }
-  .hero-inner { max-width: 680px; padding: 80px 0; }
-  .hero h1 { font-family: "Playfair Display", serif; font-size: clamp(2.4rem, 6vw, 4rem); line-height: 1.05; margin-bottom: 16px; }
-  .hero p { font-size: 1.05rem; color: #f2ece3; max-width: 480px; margin-bottom: 30px; }
+  .hero { position: relative; min-height: 150px; display: flex; align-items: center; justify-content: center; text-align: center; background-size: cover; background-position: center; background-repeat: no-repeat; color: #fff; border-radius: 0 0 28px 28px; overflow: hidden; }
+  .hero-inner { max-width: 760px; padding: 36px 20px; }
+  .hero h1 { font-family: "Playfair Display", serif; font-size: clamp(1.6rem, 4vw, 2.3rem); line-height: 1.15; margin-bottom: 6px; }
+  .hero p { font-size: 0.95rem; color: #f2ece3; max-width: 560px; margin: 0 auto; }
   .btn { display: inline-block; border: none; cursor: pointer; font-family: inherit; font-weight: 600; font-size: 0.95rem; padding: 15px 34px; border-radius: 40px; transition: transform .15s, box-shadow .2s, background .2s; }
   .btn-primary { background: var(--accent); color: #fff; box-shadow: 0 10px 24px rgba(0,0,0,0.2); }
   .btn-primary:hover { background: var(--accent-dark); transform: translateY(-2px); }
@@ -258,29 +258,13 @@
   </header>
 
   <main>
-    <section style="padding-top: 24px;">
+    <section style="padding-top: 20px;">
       <div class="container">
         <div class="hero" id="hero">
           <div class="container hero-inner">
             <h1 id="heroTitle"></h1>
             <p id="heroTagline" class="hidden"></p>
-            <a href="#catalogo" class="btn btn-primary">Ver productos</a>
-            <a href="#pago" class="btn btn-ghost">Medios de pago</a>
           </div>
-        </div>
-      </div>
-    </section>
-
-    <section id="como">
-      <div class="container">
-        <div class="section-head">
-          <span class="tag">Fácil y rápido</span>
-          <h2>¿Cómo comprar?</h2>
-        </div>
-        <div class="steps">
-          <div class="step"><div class="num">1</div><h4>Elige tus productos</h4><p>Agrega al carrito todo lo que te guste.</p></div>
-          <div class="step"><div class="num">2</div><h4>Paga por Yape o Plin</h4><p>Escanea el QR y transfiere el total.</p></div>
-          <div class="step"><div class="num">3</div><h4>Envía tu comprobante</h4><p>Mándanos la captura por WhatsApp y coordinamos la entrega.</p></div>
         </div>
       </div>
     </section>
@@ -297,6 +281,20 @@
         <div class="filters" id="filters"></div>
         <div style="height: 24px;"></div>
         <div class="grid" id="grid"></div>
+      </div>
+    </section>
+
+    <section id="como">
+      <div class="container">
+        <div class="section-head">
+          <span class="tag">Fácil y rápido</span>
+          <h2>¿Cómo comprar?</h2>
+        </div>
+        <div class="steps">
+          <div class="step"><div class="num">1</div><h4>Elige tus productos</h4><p>Agrega al carrito todo lo que te guste.</p></div>
+          <div class="step"><div class="num">2</div><h4>Paga por Yape o Plin</h4><p>Escanea el QR y transfiere el total.</p></div>
+          <div class="step"><div class="num">3</div><h4>Envía tu comprobante</h4><p>Mándanos la captura por WhatsApp y coordinamos la entrega.</p></div>
+        </div>
       </div>
     </section>
 
