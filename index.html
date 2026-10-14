@@ -182,6 +182,10 @@
 
   /* Detalle producto */
   .detail-img { width: 100%; aspect-ratio: 4/5; object-fit: cover; border-radius: 14px; margin-bottom: 16px; background: #f6efe6; }
+  .detail-gallery .main-img { width: 100%; aspect-ratio: 4/5; object-fit: cover; border-radius: 14px; margin-bottom: 10px; background: #f6efe6; }
+  .detail-thumbs { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 16px; }
+  .detail-thumbs img { width: 60px; height: 76px; object-fit: cover; border-radius: 8px; cursor: pointer; border: 2px solid transparent; transition: border-color .2s; }
+  .detail-thumbs img.active { border-color: var(--accent); }
   .detail-cat { font-size: 0.72rem; letter-spacing: 1px; text-transform: uppercase; color: var(--ink-soft); }
   .detail-name { font-family: "Playfair Display", serif; font-size: 1.5rem; line-height: 1.2; margin: 6px 0; }
   .detail-desc { color: var(--ink-soft); font-size: 0.92rem; margin-bottom: 16px; }
@@ -431,6 +435,15 @@
     return "COD" + hex.slice(0, 6);
   }
 
+  function productImages(p) {
+    const imgs = [];
+    if (p.image) imgs.push(p.image);
+    if (p.images && Array.isArray(p.images)) {
+      p.images.forEach(im => { if (im && im.image) imgs.push(im.image); });
+    }
+    return imgs;
+  }
+
   function shade(hex, pct) {
     const n = parseInt(hex.replace("#", ""), 16);
     let r = (n >> 16) & 255, g = (n >> 8) & 255, b = n & 255;
@@ -665,8 +678,13 @@
     const p = CONTENT.products.find(x => x.name === name);
     if (!p) return;
     detailQty = 1;
+    const imgs = productImages(p);
+    const mainImg = imgs[0] || '';
     $("detailBody").innerHTML = `
-      <img class="detail-img" src="${p.image || ''}" alt="${esc(p.name)}" onerror="this.onerror=null;this.src='https://placehold.co/600x750/f6efe6/1f2a33?text=${encodeURIComponent(p.name || 'Sin+imagen')}'">
+      <div class="detail-gallery">
+        <img class="main-img" id="detailMainImg" src="${mainImg}" alt="${esc(p.name)}" onerror="this.onerror=null;this.src='https://placehold.co/600x750/f6efe6/1f2a33?text=${encodeURIComponent(p.name || 'Sin+imagen')}'">
+        ${imgs.length > 1 ? `<div class="detail-thumbs">${imgs.map((im, i) => `<img src="${im}" alt="" onclick="setDetailImg(this, '${q(im)}')" class="${i === 0 ? 'active' : ''}" onerror="this.remove()">`).join("")}</div>` : ""}
+      </div>
       <div class="card-meta"><span class="detail-cat">${esc(p.category || "")}</span><span class="product-code">${productCode(p)}</span></div>
       <h2 class="detail-name">${esc(p.name)}</h2>
       ${p.description ? `<p class="detail-desc">${esc(p.description)}</p>` : ""}
@@ -690,6 +708,13 @@
   function closeDetail() {
     $("detailBackdrop").classList.remove("show");
     $("detailModal").classList.remove("show");
+  }
+
+  function setDetailImg(el, src) {
+    const main = $("detailMainImg");
+    if (main) main.src = src;
+    document.querySelectorAll(".detail-thumbs img").forEach(t => t.classList.remove("active"));
+    if (el) el.classList.add("active");
   }
 
   /* Pedido directo por WhatsApp */
