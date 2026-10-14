@@ -37,6 +37,8 @@ collections:
               - { label: "Fotos adicionales", name: "images", widget: "list", required: false, collapsed: true, summary: "Foto {{fields.image}}", fields: [{ label: "Foto", name: "image", widget: "image" }], hint: "Sube fotos extra del producto. Se verán como galería en el detalle." }
               - { label: "Agotado", name: "soldOut", widget: "boolean", default: false, hint: "Marca si no hay stock disponible" }
               - { label: "Destacado (etiqueta 'Nuevo')", name: "featured", widget: "boolean", default: false, hint: "Muestra la etiqueta 'Nuevo' en el producto" }
+              - { label: "En preventa", name: "preventa", widget: "boolean", default: false, hint: "Marca si el producto aún no llegó y se vende por adelantado" }
+              - { label: "Días de espera (preventa)", name: "diasPreventa", widget: "number", value_type: "int", default: 15, min: 1, required: false, hint: "Cuántos días tardará en llegar. Ej: 15", condition: { field: "preventa", value: true } }
 
   # ─────────────────────────────────────────────
   # AJUSTES DE LA TIENDA  (se configura pocas veces)
