@@ -6,6 +6,7 @@
 <title>Mi Tienda Express</title>
 <link rel="icon" type="image/png" href="/images/logo_pagina_web_mi_tienda-2.png" />
 <link rel="apple-touch-icon" href="/images/logo_pagina_web_mi_tienda-2.png" />
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
 <meta name="description" content="Tienda online de productos seleccionados a mano." />
 <link rel="preconnect" href="https://fonts.googleapis.com" />
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
@@ -253,6 +254,14 @@
   .cf-row { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
   .cf-row-3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 10px; }
   .cf-hint { font-size: 0.76rem; color: var(--ink-soft); margin-top: 4px; }
+  .map-picker { border: 1px solid var(--line); border-radius: 12px; overflow: hidden; background: #fff; }
+  .map-picker .map-actions { display: flex; gap: 8px; padding: 10px; border-bottom: 1px solid var(--line); flex-wrap: wrap; }
+  .map-picker .map-btn { border: 1px solid var(--line); background: #fff; color: var(--ink); border-radius: 8px; padding: 8px 12px; font-family: inherit; font-size: 0.8rem; font-weight: 600; cursor: pointer; }
+  .map-picker .map-btn:hover { border-color: var(--accent); color: var(--accent); }
+  .map-picker .map-btn.primary { background: var(--accent); color: #fff; border-color: var(--accent); }
+  .map-canvas { height: 240px; width: 100%; }
+  .map-status { padding: 10px 12px; font-size: 0.8rem; color: var(--ink-soft); border-top: 1px solid var(--line); background: #faf8f5; }
+  .map-status.selected { color: #1e7e45; font-weight: 600; }
   .ship-note { background: #fff8e6; border: 1px solid #f0d68a; color: #8a6d1a; padding: 10px 14px; border-radius: 10px; font-size: 0.82rem; margin-bottom: 14px; }
   .btn-confirm { width: 100%; background: var(--accent); color: #fff; border: none; border-radius: 14px; padding: 16px 20px; font-family: inherit; font-size: 1rem; font-weight: 700; cursor: pointer; box-shadow: 0 12px 28px rgba(255,111,97,0.35); transition: all .2s; }
   .btn-confirm:hover { background: var(--accent-dark); transform: translateY(-1px); }
@@ -438,6 +447,7 @@
 
   <div class="toast" id="toast">Producto agregado ✓</div>
 
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 <script>
   const DEFAULT_CONTENT = {
     settings: {
@@ -848,7 +858,7 @@
     const fromDirect = Array.isArray(itemsOverride);
     const items = fromDirect ? itemsOverride.map(x => ({ ...x })) : cart.map(x => ({ ...x }));
     if (!items.length) return showToast("Tu pedido está vacío");
-    payContext = { items, fromDirect };
+    payContext = { items, fromDirect, location: null, map: null, marker: null };
     const s = CONTENT.settings;
     const total = cartTotal(items);
     const summary = items.map(x => `
@@ -969,6 +979,18 @@
       </div>
 
       <div class="cf-group">
+        <label>Ubicación en el mapa (opcional)</label>
+        <div class="map-picker">
+          <div class="map-actions">
+            <button type="button" class="map-btn primary" onclick="useMyLocation()">📍 Usar mi ubicación</button>
+            <button type="button" class="map-btn" onclick="clearMapLocation()">Quitar pin</button>
+          </div>
+          <div id="payMap" class="map-canvas"></div>
+          <div id="mapStatus" class="map-status">Toca el mapa para marcar tu ubicación de entrega.</div>
+        </div>
+      </div>
+
+      <div class="cf-group">
         <label>Referencia (opcional)</label>
         <div class="cf-input">
           <span class="cf-icon"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg></span>
@@ -981,6 +1003,7 @@
     `;
     $("payBackdrop").classList.add("show");
     $("payModal").classList.add("show");
+    setTimeout(initPayMap, 60);
   }
 
   function selectPayMode(mode) {
@@ -1051,7 +1074,52 @@
     return distSel ? distSel.value : "";
   }
 
+  function initPayMap() {
+    const el = $("payMap");
+    if (!el || !window.L) return;
+    if (payContext && payContext.map) { try { payContext.map.remove(); } catch(e) {} payContext.map = null; payContext.marker = null; }
+    const map = L.map(el).setView([-12.0464, -77.0428], 12);
+    L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", { maxZoom: 19, attribution: "&copy; OpenStreetMap" }).addTo(map);
+    map.on("click", (e) => setMapLocation(e.latlng.lat, e.latlng.lng));
+    if (payContext) payContext.map = map;
+    setTimeout(() => { try { map.invalidateSize(); } catch(e) {} }, 150);
+    setTimeout(() => { try { map.invalidateSize(); } catch(e) {} }, 400);
+  }
+
+  function setMapLocation(lat, lng) {
+    if (!payContext || !payContext.map) return;
+    payContext.location = { lat, lng };
+    if (payContext.marker) {
+      payContext.marker.setLatLng([lat, lng]);
+    } else {
+      payContext.marker = L.marker([lat, lng]).addTo(payContext.map);
+    }
+    payContext.map.setView([lat, lng], 15);
+    const st = $("mapStatus");
+    if (st) { st.textContent = "✅ Ubicación seleccionada (" + lat.toFixed(5) + ", " + lng.toFixed(5) + ")"; st.classList.add("selected"); }
+  }
+
+  function clearMapLocation() {
+    if (!payContext) return;
+    payContext.location = null;
+    if (payContext.marker && payContext.map) { payContext.map.removeLayer(payContext.marker); payContext.marker = null; }
+    const st = $("mapStatus");
+    if (st) { st.textContent = "Toca el mapa para marcar tu ubicación de entrega."; st.classList.remove("selected"); }
+  }
+
+  function useMyLocation() {
+    if (!navigator.geolocation) { showToast("Tu navegador no permite geolocalización"); return; }
+    const st = $("mapStatus");
+    if (st) { st.textContent = "Obteniendo tu ubicación..."; st.classList.remove("selected"); }
+    navigator.geolocation.getCurrentPosition(
+      (pos) => setMapLocation(pos.coords.latitude, pos.coords.longitude),
+      () => { if (st) st.textContent = "No se pudo obtener tu ubicación. Marca en el mapa."; showToast("No se pudo obtener tu ubicación"); },
+      { enableHighAccuracy: true, timeout: 10000 }
+    );
+  }
+
   function closePay() {
+    if (payContext && payContext.map) { try { payContext.map.remove(); } catch(e) {} }
     $("payBackdrop").classList.remove("show");
     $("payModal").classList.remove("show");
     payContext = null;
@@ -1089,6 +1157,7 @@
     msg += `📍 *Ubicación:* ${depto} / ${prov} / ${dist}\n`;
     msg += `🏠 *Dirección:* ${address}\n`;
     if (ref) msg += `📝 *Referencia:* ${ref}\n`;
+    if (payContext && payContext.location) msg += `📌 *Ubicación en mapa:* https://www.google.com/maps?q=${payContext.location.lat},${payContext.location.lng}\n`;
     msg += `\n💳 *Modalidad:* ${modalidad}\n`;
     msg += `\n🛍️ *Productos:*\n${itemLines}\n`;
     msg += `\n💰 *Total:* ${money(total)}`;
