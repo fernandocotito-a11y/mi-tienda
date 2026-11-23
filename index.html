@@ -194,7 +194,10 @@
   .detail-desc { color: var(--ink-soft); font-size: 0.92rem; margin-bottom: 16px; }
   .detail-sizes { margin: 14px 0; }
   .detail-sizes .label { display: block; font-size: 0.85rem; font-weight: 600; color: var(--ink-soft); margin-bottom: 8px; }
-  .size-chip { display: inline-block; min-width: 38px; padding: 6px 12px; border: 1px solid var(--line); border-radius: 8px; text-align: center; font-weight: 600; font-size: 0.85rem; margin: 0 6px 6px 0; }
+  .size-chip { display: inline-block; min-width: 38px; padding: 6px 12px; border: 1px solid var(--line); border-radius: 8px; text-align: center; font-weight: 600; font-size: 0.85rem; margin: 0 6px 6px 0; transition: all .2s; }
+  .size-chip.selectable { cursor: pointer; user-select: none; }
+  .size-chip.selectable:hover { border-color: var(--accent); color: var(--accent); }
+  .size-chip.active { border-color: var(--accent); color: #fff; background: var(--accent); }
   .preventa-note { background: #fff8e6; border: 1px solid #f0d68a; color: #8a6d1a; padding: 12px 14px; border-radius: 10px; font-size: 0.88rem; margin-bottom: 14px; font-weight: 500; }
   .detail-price { font-size: 1.5rem; font-weight: 700; }
   .detail-price .old { font-size: 1rem; color: #b0b6bc; text-decoration: line-through; font-weight: 400; margin-left: 8px; }
@@ -223,6 +226,44 @@
   .customer-form input[type=file] { width: 100%; font-size: 0.85rem; color: var(--ink-soft); }
   .proof-preview { margin-top: 8px; }
   .proof-preview img { max-width: 100%; max-height: 140px; border-radius: 8px; border: 1px solid var(--line); }
+
+  /* Checkout COD */
+  .pay-options { display: grid; gap: 12px; margin-bottom: 18px; }
+  .pay-option { border: 2px solid var(--line); border-radius: 14px; padding: 14px 16px; cursor: pointer; transition: all .2s; background: #fff; display: flex; gap: 12px; align-items: flex-start; }
+  .pay-option:hover { border-color: #d8b4ae; }
+  .pay-option.selected { border-color: var(--accent); background: #fffaf9; }
+  .pay-option input[type=radio] { margin-top: 3px; accent-color: var(--accent); width: 18px; height: 18px; flex-shrink: 0; }
+  .pay-option .opt-body { flex: 1; }
+  .pay-option .opt-title { font-weight: 700; font-size: 0.92rem; color: var(--ink); margin-bottom: 2px; }
+  .pay-option .opt-desc { font-size: 0.8rem; color: var(--ink-soft); line-height: 1.45; }
+  .cod-badge { display: inline-flex; align-items: center; gap: 6px; background: #eafaf1; color: #1e7e45; border: 1px solid #bfe5cd; padding: 10px 14px; border-radius: 10px; font-size: 0.84rem; font-weight: 600; margin-bottom: 16px; width: 100%; }
+  .pay-section { margin-bottom: 16px; }
+  .pay-section.hidden { display: none; }
+  .cf-group { margin-bottom: 14px; }
+  .cf-group label { display: block; font-size: 0.82rem; font-weight: 600; color: var(--ink-soft); margin-bottom: 6px; }
+  .cf-input { position: relative; }
+  .cf-input .cf-icon { position: absolute; left: 13px; top: 50%; transform: translateY(-50%); color: #9aa3ab; display: flex; pointer-events: none; }
+  .cf-input input, .cf-input select { width: 100%; border: 1px solid var(--line); border-radius: 10px; padding: 12px 14px 12px 42px; font-family: inherit; font-size: 0.9rem; background: #fff; color: var(--ink); }
+  .cf-input input:focus, .cf-input select:focus { outline: none; border-color: var(--accent); }
+  .cf-input.no-icon input, .cf-input.no-icon select { padding-left: 14px; }
+  .cf-phone { display: flex; gap: 0; }
+  .cf-phone .cf-prefix { border: 1px solid var(--line); border-right: 0; border-radius: 10px 0 0 10px; padding: 12px 12px; font-size: 0.9rem; font-weight: 600; color: var(--ink); background: #f7f3ee; display: flex; align-items: center; }
+  .cf-phone .cf-input { flex: 1; }
+  .cf-phone .cf-input input { border-radius: 0 10px 10px 0; }
+  .cf-row { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+  .cf-row-3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 10px; }
+  .cf-hint { font-size: 0.76rem; color: var(--ink-soft); margin-top: 4px; }
+  .ship-note { background: #fff8e6; border: 1px solid #f0d68a; color: #8a6d1a; padding: 10px 14px; border-radius: 10px; font-size: 0.82rem; margin-bottom: 14px; }
+  .btn-confirm { width: 100%; background: var(--accent); color: #fff; border: none; border-radius: 14px; padding: 16px 20px; font-family: inherit; font-size: 1rem; font-weight: 700; cursor: pointer; box-shadow: 0 12px 28px rgba(255,111,97,0.35); transition: all .2s; }
+  .btn-confirm:hover { background: var(--accent-dark); transform: translateY(-1px); }
+  .btn-confirm-sub { text-align: center; font-size: 0.78rem; color: var(--ink-soft); margin-top: 8px; }
+  .order-item-mini { display: flex; gap: 12px; align-items: center; padding: 8px 0; border-bottom: 1px solid rgba(221,214,201,0.5); }
+  .order-item-mini:last-child { border-bottom: 0; padding-bottom: 0; }
+  .order-item-mini img { width: 52px; height: 66px; object-fit: cover; border-radius: 8px; background: #efe4d4; flex-shrink: 0; }
+  .order-item-mini .oi-name { font-weight: 600; font-size: 0.88rem; line-height: 1.3; }
+  .order-item-mini .oi-meta { font-size: 0.78rem; color: var(--ink-soft); }
+  .order-item-mini .oi-price { margin-left: auto; font-weight: 700; font-size: 0.9rem; white-space: nowrap; }
+  @media (max-width: 720px) { .cf-row-3 { grid-template-columns: 1fr; } .cf-row { grid-template-columns: 1fr; } }
 
   /* Flotante WhatsApp */
   .float-wa { position: fixed; right: 22px; bottom: 22px; z-index: 240; width: 58px; height: 58px; border-radius: 50%; background: var(--wa); display: grid; place-items: center; box-shadow: 0 10px 26px rgba(37,211,102,0.45); transition: transform .2s; animation: pulse 2.2s infinite; }
@@ -415,6 +456,8 @@
   let activeFilter = "all";
   let searchTerm = "";
   let detailQty = 1;
+  let detailSelectedSize = null;
+  let payContext = null;
 
   const $ = (id) => document.getElementById(id);
 
@@ -633,24 +676,31 @@
   }
 
   /* Carrito */
-  function addToCart(name, qty = 1) {
+  function cartKey(name, size) { return String(name || "") + "||" + String(size || ""); }
+  function addToCart(name, qty = 1, size = "") {
     const p = CONTENT.products.find(x => x.name === name);
     if (!p) return;
-    const existing = cart.find(x => x.name === name);
+    const key = cartKey(name, size);
+    const existing = cart.find(x => cartKey(x.name, x.size) === key);
     if (existing) existing.qty += qty;
-    else cart.push({ ...p, qty });
+    else cart.push({ ...p, qty, size: size || "" });
     updateCart();
     showToast("Agregado a tu pedido ✓");
   }
-  function removeFromCart(name) { cart = cart.filter(x => x.name !== name); updateCart(); }
-  function changeQty(name, delta) {
-    const item = cart.find(x => x.name === name);
-    if (!item) return;
-    item.qty += delta;
-    if (item.qty <= 0) cart = cart.filter(x => x.name !== name);
+  function removeFromCart(name, size = "") {
+    const key = cartKey(name, size);
+    cart = cart.filter(x => cartKey(x.name, x.size) !== key);
     updateCart();
   }
-  function cartTotal() { return cart.reduce((s, x) => s + x.price * x.qty, 0); }
+  function changeQty(name, size, delta) {
+    const key = cartKey(name, size);
+    const item = cart.find(x => cartKey(x.name, x.size) === key);
+    if (!item) return;
+    item.qty += delta;
+    if (item.qty <= 0) cart = cart.filter(x => cartKey(x.name, x.size) !== key);
+    updateCart();
+  }
+  function cartTotal(items) { return (items || cart).reduce((s, x) => s + x.price * x.qty, 0); }
 
   function updateCart() {
     const total = cartTotal();
@@ -664,13 +714,13 @@
         <div class="cart-item">
           <img src="${x.image || ''}" alt="${esc(x.name)}" onerror="this.onerror=null;this.src='https://placehold.co/140x180/f6efe6/1f2a33?text=${encodeURIComponent(x.name)}'">
           <div class="info">
-            <h4>${esc(x.name)}</h4>
+            <h4>${esc(x.name)}${x.size ? ` <span style="font-size:0.78rem;color:var(--ink-soft);font-weight:500;">(Talla ${esc(x.size)})</span>` : ""}</h4>
             <span class="price">${money(x.price)}</span>
             <div class="qty">
-              <button onclick="changeQty('${q(x.name)}', -1)">−</button>
+              <button onclick="changeQty('${q(x.name)}', '${q(x.size || "")}', -1)">−</button>
               <span>${x.qty}</span>
-              <button onclick="changeQty('${q(x.name)}', 1)">+</button>
-              <button class="remove" onclick="removeFromCart('${q(x.name)}')" style="margin-left:auto;">Quitar</button>
+              <button onclick="changeQty('${q(x.name)}', '${q(x.size || "")}', 1)">+</button>
+              <button class="remove" onclick="removeFromCart('${q(x.name)}', '${q(x.size || "")}')" style="margin-left:auto;">Quitar</button>
             </div>
           </div>
         </div>`).join("");
@@ -682,6 +732,7 @@
     const p = CONTENT.products.find(x => x.name === name);
     if (!p) return;
     detailQty = 1;
+    detailSelectedSize = null;
     const imgs = productImages(p);
     const mainImg = imgs[0] || '';
     $("detailBody").innerHTML = `
@@ -693,7 +744,7 @@
       <h2 class="detail-name">${esc(p.name)}</h2>
       ${p.description ? `<p class="detail-desc">${esc(p.description)}</p>` : ""}
       ${p.preventa ? `<div class="preventa-note">⏳ Preventa: este producto se envía en ${p.diasPreventa || 15} días.</div>` : ""}
-      ${p.sizes && p.sizes.length ? `<div class="detail-sizes"><span class="label">Talles disponibles:</span>${p.sizes.map(s => `<span class="size-chip">${esc(s)}</span>`).join("")}</div>` : ""}
+      ${p.sizes && p.sizes.length ? `<div class="detail-sizes"><span class="label">Selecciona tu talla:</span><div id="detailSizeWrap">${p.sizes.map(s => `<span class="size-chip selectable" onclick="selectDetailSize(this, '${q(s)}')">${esc(s)}</span>`).join("")}</div><div id="sizeWarn" style="display:none;color:#c0392b;font-size:0.8rem;margin-top:6px;">Selecciona una talla para continuar</div></div>` : ""}
       <div class="detail-price">${money(p.price)}${p.oldPrice ? `<span class="old">${money(p.oldPrice)}</span>` : ""}</div>
       ${p.soldOut ? `<p style="color:#c0392b;font-weight:600;margin-top:12px;">Producto agotado</p>` : `
         <div class="detail-qty">
@@ -702,13 +753,44 @@
           <button onclick="detailQty = detailQty+1; this.previousElementSibling.textContent = detailQty;">+</button>
         </div>
         <div class="detail-actions">
-          <button class="btn btn-primary" onclick="addToCart('${q(p.name)}', detailQty); closeDetail();">Agregar al pedido</button>
-          <button class="btn btn-wa" onclick="orderDirect('${q(p.name)}', detailQty)">Pedir por WhatsApp</button>
+          <button class="btn btn-primary" onclick="if(!ensureDetailSize('${q(p.name)}'))return; addToCart('${q(p.name)}', detailQty, detailSelectedSize); closeDetail();">Agregar al pedido</button>
+          <button class="btn btn-wa" onclick="buyNowDetail('${q(p.name)}')">Comprar ahora (Contra entrega)</button>
         </div>
       `}
     `;
     $("detailBackdrop").classList.add("show");
     $("detailModal").classList.add("show");
+  }
+
+  function selectDetailSize(el, size) {
+    detailSelectedSize = size;
+    document.querySelectorAll("#detailSizeWrap .size-chip").forEach(c => c.classList.remove("active"));
+    el.classList.add("active");
+    const warn = $("sizeWarn");
+    if (warn) warn.style.display = "none";
+  }
+
+  function ensureDetailSize(name) {
+    const p = CONTENT.products.find(x => x.name === name);
+    if (p && p.sizes && p.sizes.length && !detailSelectedSize) {
+      const warn = $("sizeWarn");
+      if (warn) warn.style.display = "block";
+      return false;
+    }
+    return true;
+  }
+
+  function buyNowDetail(name) {
+    const p = CONTENT.products.find(x => x.name === name);
+    if (!p) return;
+    if (p.sizes && p.sizes.length && !detailSelectedSize) {
+      const warn = $("sizeWarn");
+      if (warn) warn.style.display = "block";
+      return;
+    }
+    const item = { ...p, qty: detailQty, size: detailSelectedSize || "" };
+    closeDetail();
+    openPay([item]);
   }
   function closeDetail() {
     $("detailBackdrop").classList.remove("show");
@@ -730,14 +812,59 @@
     window.open(`https://wa.me/${CONTENT.settings.whatsapp}?text=${msg}`, "_blank");
   }
 
+  /* Ubigeo Perú (ligero) */
+  const UBIGEO = {
+    "Amazonas": { "Chachapoyas": [], "Bagua": [], "Utcubamba": [] },
+    "Áncash": { "Huaraz": [], "Santa": ["Chimbote","Nuevo Chimbote","Coishco","Santa"], "Huaylas": [], "Casma": [] },
+    "Apurímac": { "Abancay": [], "Andahuaylas": [] },
+    "Arequipa": { "Arequipa": ["Arequipa","Alto Selva Alegre","Cayma","Cerro Colorado","Characato","Chiguata","Jacobo Hunter","José Luis Bustamante y Rivero","Mariano Melgar","Miraflores","Mollebaya","Paucarpata","Pocsi","Polobaya","Quequeña","Sabandía","Sachaca","San Juan de Siguas","San Juan de Tarucani","Santa Isabel de Siguas","Santa Rita de Siguas","Socabaya","Tiabaya","Uchumayo","Vítor","Yanahuara","Yarabamba","Yura"], "Camaná": [], "Islay": ["Mollendo","Cocachacra","Mejía"] },
+    "Ayacucho": { "Huamanga": ["Ayacucho","San Juan Bautista","Jesús Nazareno","Andrés Avelino Cáceres"], "La Mar": [] },
+    "Cajamarca": { "Cajamarca": [], "Jaén": [], "Chota": [] },
+    "Callao": { "Callao": ["Callao","Bellavista","Carmen de la Legua Reynoso","La Perla","La Punta","Mi Perú","Ventanilla"] },
+    "Cusco": { "Cusco": ["Cusco","Ccorca","Poroy","San Jerónimo","San Sebastián","Santiago","Saylla","Wanchaq"], "La Convención": [], "Urubamba": [] },
+    "Huancavelica": { "Huancavelica": [], "Tayacaja": [] },
+    "Huánuco": { "Huánuco": [], "Leoncio Prado": [] },
+    "Ica": { "Ica": ["Ica","La Tinguiña","Los Aquijes","Parcona","Pueblo Nuevo","Subtanjalla"], "Chincha": ["Chincha Alta","Grocio Prado","Pueblo Nuevo","Sunampe"], "Pisco": ["Pisco","San Andrés","San Clemente","Túpac Amaru Inca"] },
+    "Junín": { "Huancayo": ["Huancayo","El Tambo","Chilca"], "Satipo": [], "Chanchamayo": [] },
+    "La Libertad": { "Trujillo": ["Trujillo","El Porvenir","Florencia de Mora","Huanchaco","La Esperanza","Laredo","Moche","Poroto","Salaverry","Simbal","Víctor Larco Herrera"], "Chepén": [], "Pacasmayo": [] },
+    "Lambayeque": { "Chiclayo": ["Chiclayo","José Leonardo Ortiz","La Victoria","Pimentel","Pomalca","Reque"], "Lambayeque": [], "Ferreñafe": [] },
+    "Lima": { "Lima": ["Ancón","Ate","Barranco","Breña","Carabayllo","Cercado de Lima","Chaclacayo","Chorrillos","Cieneguilla","Comas","El Agustino","Independencia","Jesús María","La Molina","La Victoria","Lince","Los Olivos","Lurigancho-Chosica","Lurín","Magdalena del Mar","Miraflores","Pachacámac","Pucusana","Pueblo Libre","Puente Piedra","Punta Hermosa","Punta Negra","Rímac","San Bartolo","San Borja","San Isidro","San Juan de Lurigancho","San Juan de Miraflores","San Luis","San Martín de Porres","San Miguel","Santa Anita","Santa María del Mar","Santa Rosa","Santiago de Surco","Surquillo","Villa El Salvador","Villa María del Triunfo"], "Barranca": [], "Cajatambo": [], "Cañete": ["San Vicente de Cañete","Asia","Mala"], "Huaral": ["Huaral","Chancay"], "Huarochirí": [], "Huaura": ["Huacho","Hualmay","Santa María"], "Oyón": [], "Yauyos": [] },
+    "Loreto": { "Maynas": ["Iquitos","Punchana","San Juan Bautista","Belén"], "Alto Amazonas": [] },
+    "Madre de Dios": { "Tambopata": ["Tambopata","Puerto Maldonado"] },
+    "Moquegua": { "Mariscal Nieto": ["Moquegua"], "Ilo": [] },
+    "Pasco": { "Pasco": [], "Oxapampa": [] },
+    "Piura": { "Piura": ["Piura","Castilla","Catacaos"], "Sullana": ["Sullana","Bellavista"], "Talara": ["Pariñas","Talara"], "Paita": [] },
+    "Puno": { "Puno": ["Puno"], "San Román": ["Juliaca"] },
+    "San Martín": { "Moyobamba": [], "San Martín": ["Tarapoto","La Banda de Shilcayo","Morales"] },
+    "Tacna": { "Tacna": ["Tacna","Alto de la Alianza","Ciudad Nueva","Pocollay"] },
+    "Tumbes": { "Tumbes": ["Tumbes","Corrales"], "Zarumilla": [] },
+    "Ucayali": { "Coronel Portillo": ["Callería","Yarinacocha","Manantay"] }
+  };
+
   /* Pago */
-  function openPay() {
-    if (!cart.length) return showToast("Tu pedido está vacío");
+  function payItems() { return (payContext && payContext.items) ? payContext.items : cart; }
+
+  function openPay(itemsOverride) {
+    const fromDirect = Array.isArray(itemsOverride);
+    const items = fromDirect ? itemsOverride.map(x => ({ ...x })) : cart.map(x => ({ ...x }));
+    if (!items.length) return showToast("Tu pedido está vacío");
+    payContext = { items, fromDirect };
     const s = CONTENT.settings;
-    const items = cart.map(x => `<div class="row"><span>${esc(x.name)} x${x.qty}</span><span>${money(x.price * x.qty)}</span></div>`).join("");
-    const methods = [];
+    const total = cartTotal(items);
+    const summary = items.map(x => `
+      <div class="order-item-mini">
+        <img src="${esc(x.image || '')}" alt="${esc(x.name)}" onerror="this.style.display='none'">
+        <div>
+          <div class="oi-name">${esc(x.name)}</div>
+          <div class="oi-meta">${x.size ? `Talla: ${esc(x.size)} · ` : ""}Cant: ${x.qty}</div>
+        </div>
+        <div class="oi-price">${money(x.price * x.qty)}</div>
+      </div>`).join("");
+
+    const hasPay = !!(s.yapeQr || s.yapeNumber || s.plinQr || s.plinNumber);
+    const prepaidMethods = [];
     if (s.yapeQr || s.yapeNumber) {
-      methods.push(`<div class="pay-method">
+      prepaidMethods.push(`<div class="pay-method">
         <div class="pay-brand" style="color:#6f2dbd;">YAPE</div>
         ${s.yapeQr ? `<img class="qr" src="${s.yapeQr}" alt="QR Yape" onerror="this.remove()">` : ""}
         ${s.yapeNumber ? `<div class="num">${esc(s.yapeNumber)}</div>` : ""}
@@ -746,46 +873,239 @@
       </div>`);
     }
     if (s.plinQr || s.plinNumber) {
-      methods.push(`<div class="pay-method">
+      prepaidMethods.push(`<div class="pay-method">
         <div class="pay-brand" style="color:#00a5e0;">PLIN</div>
         ${s.plinQr ? `<img class="qr" src="${s.plinQr}" alt="QR Plin" onerror="this.remove()">` : ""}
         ${s.plinNumber ? `<div class="num">${esc(s.plinNumber)}</div>` : ""}
         ${s.plinNumber ? `<button class="copy-btn" onclick="copyText('${esc(s.plinNumber)}')">Copiar</button>` : ""}
       </div>`);
     }
+
+    const deptos = Object.keys(UBIGEO).map(d => `<option value="${esc(d)}">${esc(d)}</option>`).join("");
+
     $("payBody").innerHTML = `
       <div class="order-summary">
-        ${items}
-        <div class="total"><span>Total a pagar</span><span>${money(cartTotal())}</span></div>
+        ${summary}
+        <div class="total"><span>Total</span><span id="payTotal">${money(total)}</span></div>
       </div>
-      ${methods.length ? `<div class="pay-methods">${methods.join("")}</div><p style="font-size:0.85rem;color:var(--ink-soft);margin-bottom:16px;">Escanea el QR o copia el número. Luego completa tus datos y sube tu comprobante.</p>` : `<p style="font-size:0.88rem;color:var(--ink-soft);margin-bottom:16px;">Coordina el pago directamente por WhatsApp.</p>`}
-      <div class="customer-form">
-        <label>Tu nombre y apellido *</label>
-        <input type="text" id="customerName" placeholder="Ej: María Pérez" />
-        <label>Foto del comprobante de pago (Yape/Plin)</label>
-        <input type="file" id="paymentProof" accept="image/*" onchange="previewProof(this)" />
-        <div class="proof-preview" id="proofPreview"></div>
+
+      <div class="cf-group">
+        <label style="margin-bottom:8px;">Método de entrega / pago</label>
+        <div class="pay-options">
+          <label class="pay-option selected" id="optCod" onclick="selectPayMode('cod')">
+            <input type="radio" name="payMode" value="cod" checked>
+            <div class="opt-body">
+              <div class="opt-title">Pago Contra Entrega (Lima y Callao)</div>
+              <div class="opt-desc">Paga en efectivo o Yape/Plin al recibir tu pedido.</div>
+            </div>
+          </label>
+          <label class="pay-option" id="optPrepaid" onclick="selectPayMode('prepaid')">
+            <input type="radio" name="payMode" value="prepaid">
+            <div class="opt-body">
+              <div class="opt-title">Pago adelantado / Envío a Provincia (Yape / Plin)</div>
+              <div class="opt-desc">Paga antes del envío. Ideal para provincias.</div>
+            </div>
+          </label>
+        </div>
       </div>
-      <button class="btn btn-wa" style="width:100%;" onclick="confirmOrder()">Ya pagué — enviar pedido por WhatsApp</button>
+
+      <div id="codBadge" class="cod-badge">✅ Pagas al recibir tu pedido en casa</div>
+
+      <div id="prepaidSection" class="pay-section hidden">
+        ${hasPay ? `<div class="pay-methods">${prepaidMethods.join("")}</div>` : `<p style="font-size:0.88rem;color:var(--ink-soft);margin-bottom:12px;">Coordina el pago por WhatsApp.</p>`}
+        <div class="cf-group">
+          <label>Foto del comprobante de pago (opcional)</label>
+          <input type="file" id="paymentProof" accept="image/*" onchange="previewProof(this)" style="width:100%;font-size:0.85rem;color:var(--ink-soft);" />
+          <div class="proof-preview" id="proofPreview"></div>
+        </div>
+      </div>
+
+      <div id="shipNote" class="ship-note hidden">📦 Envío a provincia: coordinamos el envío por Shalom / Olva Courier tras confirmar tu pago.</div>
+
+      <div class="cf-group">
+        <label>Nombres y Apellidos *</label>
+        <div class="cf-input">
+          <span class="cf-icon"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg></span>
+          <input type="text" id="customerName" placeholder="Ej: María Pérez" />
+        </div>
+      </div>
+
+      <div class="cf-group">
+        <label>Celular / WhatsApp *</label>
+        <div class="cf-phone">
+          <span class="cf-prefix">+51</span>
+          <div class="cf-input">
+            <span class="cf-icon"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07A19.5 19.5 0 0 1 3.69 12a19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 2.6 1.27h3a2 2 0 0 1 2 1.72c.13 1 .37 1.99.72 2.93a2 2 0 0 1-.45 2.11L6.91 9a16 16 0 0 0 6.09 6.09l.97-.97a2 2 0 0 1 2.11-.45c.94.35 1.93.59 2.93.72A2 2 0 0 1 22 16.92z"/></svg></span>
+            <input type="text" id="customerPhone" inputmode="numeric" maxlength="9" placeholder="987654321" />
+          </div>
+        </div>
+        <div class="cf-hint">9 dígitos, sin espacios</div>
+      </div>
+
+      <div class="cf-group">
+        <label>Ubigeo (Departamento / Provincia / Distrito) *</label>
+        <div class="cf-row-3">
+          <div class="cf-input no-icon">
+            <select id="shipDepto" onchange="onDeptoChange()"><option value="">Departamento</option>${deptos}</select>
+          </div>
+          <div class="cf-input no-icon">
+            <select id="shipProv" onchange="onProvChange()" disabled><option value="">Provincia</option></select>
+          </div>
+          <div class="cf-input no-icon" id="distWrap">
+            <select id="shipDist" disabled><option value="">Distrito</option></select>
+          </div>
+        </div>
+        <div id="distTextWrap" class="cf-input no-icon hidden" style="margin-top:10px;">
+          <input type="text" id="shipDistText" placeholder="Escribe tu distrito" />
+        </div>
+      </div>
+
+      <div class="cf-group">
+        <label>Dirección exacta *</label>
+        <div class="cf-input">
+          <span class="cf-icon"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 10c0 7-9 13-9 13S3 17 3 10a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg></span>
+          <input type="text" id="shipAddress" placeholder="Av. / Jr. / Calle, N°, Mz/Lt" />
+        </div>
+      </div>
+
+      <div class="cf-group">
+        <label>Referencia (opcional)</label>
+        <div class="cf-input">
+          <span class="cf-icon"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg></span>
+          <input type="text" id="shipRef" placeholder="Ej: Frente al parque, reja negra" />
+        </div>
+      </div>
+
+      <button class="btn-confirm" onclick="confirmOrder()">COMPLETAR PEDIDO — ${money(total)}</button>
+      <div class="btn-confirm-sub">Confirmación inmediata por WhatsApp</div>
     `;
     $("payBackdrop").classList.add("show");
     $("payModal").classList.add("show");
   }
+
+  function selectPayMode(mode) {
+    const cod = $("optCod"), pre = $("optPrepaid");
+    if (cod) cod.classList.toggle("selected", mode === "cod");
+    if (pre) pre.classList.toggle("selected", mode === "prepaid");
+    const codRadio = document.querySelector('input[name="payMode"][value="cod"]');
+    const preRadio = document.querySelector('input[name="payMode"][value="prepaid"]');
+    if (codRadio) codRadio.checked = mode === "cod";
+    if (preRadio) preRadio.checked = mode === "prepaid";
+    const badge = $("codBadge");
+    const preSec = $("prepaidSection");
+    if (badge) badge.classList.toggle("hidden", mode !== "cod");
+    if (preSec) preSec.classList.toggle("hidden", mode !== "prepaid");
+    const depto = $("shipDepto") ? $("shipDepto").value : "";
+    const shipNote = $("shipNote");
+    if (shipNote) shipNote.classList.toggle("hidden", !(mode === "prepaid" && depto && depto !== "Lima" && depto !== "Callao"));
+  }
+
+  function onDeptoChange() {
+    const depto = $("shipDepto").value;
+    const provSel = $("shipProv");
+    const distSel = $("shipDist");
+    const distTextWrap = $("distTextWrap");
+    provSel.innerHTML = '<option value="">Provincia</option>';
+    distSel.innerHTML = '<option value="">Distrito</option>';
+    distSel.disabled = true;
+    if (distTextWrap) distTextWrap.classList.add("hidden");
+    if (!depto || !UBIGEO[depto]) { provSel.disabled = true; return; }
+    const provs = Object.keys(UBIGEO[depto]);
+    provs.forEach(p => { const o = document.createElement("option"); o.value = p; o.textContent = p; provSel.appendChild(o); });
+    provSel.disabled = false;
+
+    if (depto === "Lima" || depto === "Callao") {
+      selectPayMode("cod");
+      $("shipNote").classList.add("hidden");
+    } else {
+      selectPayMode("prepaid");
+      $("shipNote").classList.remove("hidden");
+    }
+  }
+
+  function onProvChange() {
+    const depto = $("shipDepto").value;
+    const prov = $("shipProv").value;
+    const distSel = $("shipDist");
+    const distTextWrap = $("distTextWrap");
+    distSel.innerHTML = '<option value="">Distrito</option>';
+    const dists = (UBIGEO[depto] && UBIGEO[depto][prov]) ? UBIGEO[depto][prov] : [];
+    if (dists.length) {
+      dists.forEach(d => { const o = document.createElement("option"); o.value = d; o.textContent = d; distSel.appendChild(o); });
+      distSel.disabled = false;
+      $("distWrap").classList.remove("hidden");
+      if (distTextWrap) distTextWrap.classList.add("hidden");
+    } else {
+      distSel.disabled = true;
+      $("distWrap").classList.add("hidden");
+      if (distTextWrap) distTextWrap.classList.remove("hidden");
+      const dt = $("shipDistText");
+      if (dt) dt.value = "";
+    }
+  }
+
+  function getSelectedDistrict() {
+    const distSel = $("shipDist");
+    const distTextWrap = $("distTextWrap");
+    if (distTextWrap && !distTextWrap.classList.contains("hidden")) return ($("shipDistText").value || "").trim();
+    return distSel ? distSel.value : "";
+  }
+
   function closePay() {
     $("payBackdrop").classList.remove("show");
     $("payModal").classList.remove("show");
+    payContext = null;
   }
+
   function confirmOrder() {
-    const name = $("customerName").value.trim();
+    const items = payItems();
+    if (!items.length) return showToast("Tu pedido está vacío");
+
+    const name = ($("customerName").value || "").trim();
+    const phone = ($("customerPhone").value || "").trim();
+    const depto = $("shipDepto").value;
+    const prov = $("shipProv").value;
+    const dist = getSelectedDistrict();
+    const address = ($("shipAddress").value || "").trim();
+    const ref = ($("shipRef").value || "").trim();
+    const mode = (document.querySelector('input[name="payMode"]:checked') || {}).value || "cod";
+
     if (!name) { showToast("Escribe tu nombre y apellido"); return; }
+    if (!/^\d{9}$/.test(phone)) { showToast("Ingresa un celular válido de 9 dígitos"); return; }
+    if (!depto) { showToast("Selecciona tu departamento"); return; }
+    if (!prov) { showToast("Selecciona tu provincia"); return; }
+    if (!dist) { showToast("Selecciona o escribe tu distrito"); return; }
+    if (!address) { showToast("Escribe tu dirección exacta"); return; }
+
     const proofInput = $("paymentProof");
-    const proofFile = proofInput.files && proofInput.files[0];
-    const items = cart.map(x => `• ${productCode(x)} · ${x.name}${x.preventa ? " (Preventa)" : ""} (x${x.qty}) — ${money(x.price * x.qty)}`).join("\n");
-    const msg = `📦 *NUEVO PEDIDO — Mi Tienda Express*\n\n👤 *Cliente:* ${name}\n\n🛍️ *Productos:*\n${items}\n\n💰 *Total:* ${money(cartTotal())}\n\n🧾 Adjunto mi comprobante de pago.`;
+    const proofFile = proofInput && proofInput.files && proofInput.files[0];
+    const modalidad = mode === "cod" ? "Pago Contra Entrega (Lima y Callao)" : "Pago adelantado / Envío a Provincia (Yape / Plin)";
+    const itemLines = items.map(x => `• ${productCode(x)} · ${x.name}${x.size ? ` (Talla: ${x.size})` : ""}${x.preventa ? " (Preventa)" : ""} (x${x.qty}) — ${money(x.price * x.qty)}`).join("\n");
+    const total = cartTotal(items);
 
-    const done = () => { cart = []; updateCart(); closePay(); };
+    let msg = `📦 *NUEVO PEDIDO — Mi Tienda Express*\n\n`;
+    msg += `👤 *Cliente:* ${name}\n`;
+    msg += `📱 *Teléfono:* +51 ${phone}\n`;
+    msg += `📍 *Ubicación:* ${depto} / ${prov} / ${dist}\n`;
+    msg += `🏠 *Dirección:* ${address}\n`;
+    if (ref) msg += `📝 *Referencia:* ${ref}\n`;
+    msg += `\n💳 *Modalidad:* ${modalidad}\n`;
+    msg += `\n🛍️ *Productos:*\n${itemLines}\n`;
+    msg += `\n💰 *Total:* ${money(total)}`;
+    if (mode === "prepaid" && proofFile) msg += `\n\n🧾 Adjunto mi comprobante de pago.`;
+    if (mode === "cod") msg += `\n\n✅ Pago contra entrega al recibir.`;
 
-    if (proofFile && navigator.canShare && navigator.canShare({ files: [proofFile] })) {
+    const done = () => {
+      if (payContext && payContext.fromDirect) {
+        // direct buy: do not clear entire cart unless items were in cart; keep cart as-is
+      } else {
+        cart = [];
+      }
+      updateCart();
+      closePay();
+    };
+
+    if (mode === "prepaid" && proofFile && navigator.canShare && navigator.canShare({ files: [proofFile] })) {
       navigator.share({ files: [proofFile], text: msg, title: "Pedido Mi Tienda Express" })
         .then(done)
         .catch(() => showToast("Envío cancelado"));
