@@ -254,6 +254,15 @@
   .cf-row { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
   .cf-row-3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 10px; }
   .cf-hint { font-size: 0.76rem; color: var(--ink-soft); margin-top: 4px; }
+  .addr-wrap { position: relative; }
+  .addr-suggestions { position: static; width: 100%; margin-top: 6px; background: #fff; border: 1px solid var(--line); border-radius: 12px; box-shadow: 0 8px 20px rgba(31,42,51,0.08); max-height: 240px; overflow-y: auto; display: none; }
+  .addr-suggestions.show { display: block; }
+  .addr-sug { padding: 12px 14px; cursor: pointer; border-bottom: 1px solid #f0ebe3; font-size: 0.86rem; line-height: 1.35; }
+  .addr-sug:last-child { border-bottom: 0; }
+  .addr-sug:hover, .addr-sug.active { background: #fff6f5; }
+  .addr-sug strong { display: block; color: var(--ink); font-size: 0.88rem; }
+  .addr-sug small { color: var(--ink-soft); font-size: 0.78rem; }
+  .addr-loading { padding: 12px 14px; font-size: 0.82rem; color: var(--ink-soft); }
   .map-picker { border: 1px solid var(--line); border-radius: 12px; overflow: hidden; background: #fff; }
   .map-picker .map-actions { display: flex; gap: 8px; padding: 10px; border-bottom: 1px solid var(--line); flex-wrap: wrap; }
   .map-picker .map-btn { border: 1px solid var(--line); background: #fff; color: var(--ink); border-radius: 8px; padding: 8px 12px; font-family: inherit; font-size: 0.8rem; font-weight: 600; cursor: pointer; }
@@ -970,12 +979,14 @@
         </div>
       </div>
 
-      <div class="cf-group">
+      <div class="cf-group addr-wrap">
         <label>Dirección exacta *</label>
         <div class="cf-input">
           <span class="cf-icon"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 10c0 7-9 13-9 13S3 17 3 10a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg></span>
-          <input type="text" id="shipAddress" placeholder="Av. / Jr. / Calle, N°, Mz/Lt" oninput="scheduleForwardGeocode()" />
+          <input type="text" id="shipAddress" placeholder="Busca tu calle, avenida o dirección..." autocomplete="off" oninput="onAddressInput()" onfocus="onAddressInput()" />
         </div>
+        <div id="addrSuggestions" class="addr-suggestions"></div>
+        <div class="cf-hint">Escribe y selecciona una opción, o marca tu ubicación en el mapa.</div>
       </div>
 
       <div class="cf-group">
@@ -1100,6 +1111,7 @@
     payContext.map.setView([lat, lng], opts.zoom || 15);
     const st = $("mapStatus");
     if (st) { st.textContent = "✅ Ubicación seleccionada (" + lat.toFixed(5) + ", " + lng.toFixed(5) + ")"; st.classList.add("selected"); }
+    hideAddrSuggestions();
     if (!opts.skipReverse) reverseGeocode(lat, lng);
   }
 
@@ -1125,9 +1137,9 @@
   function normTxt(s) { return String(s || "").toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "").trim(); }
 
   function matchUbigeo(addr) {
-    const state = normTxt(addr.state || addr.region || "");
-    const city = normTxt(addr.city || addr.town || addr.municipality || addr.county || "");
-    const suburb = normTxt(addr.suburb || addr.city_district || addr.neighbourhood || addr.quarter || addr.village || "");
+    const state = normTxt(addr.state || addr.region || addr.state_district || "");
+    const provRaw = normTxt(addr.province || addr.county || addr.city || addr.town || addr.municipality || "");
+    const distRaw = normTxt(addr.suburb || addr.city_district || addr.neighbourhood || addr.quarter || addr.village || addr.hamlet || "");
     let depto = "", prov = "", dist = "";
 
     for (const d of Object.keys(UBIGEO)) {
@@ -1136,24 +1148,22 @@
     }
     if (!depto) {
       for (const d of Object.keys(UBIGEO)) {
-        if (city.includes(normTxt(d)) || normTxt(d).includes(city)) { depto = d; break; }
+        const dn = normTxt(d);
+        if (provRaw.includes(dn) || distRaw.includes(dn)) { depto = d; break; }
       }
     }
     if (depto) {
       const provs = Object.keys(UBIGEO[depto]);
       for (const p of provs) {
         const pn = normTxt(p);
-        if (city.includes(pn) || pn.includes(city) || suburb.includes(pn)) { prov = p; break; }
+        if (provRaw.includes(pn) || pn.includes(provRaw) || distRaw.includes(pn)) { prov = p; break; }
       }
-      if (!prov && provs.length) {
-        if (depto === "Lima") prov = "Lima";
-        else if (depto === "Callao") prov = "Callao";
-      }
+      if (!prov && (depto === "Lima" || depto === "Callao")) prov = depto;
       if (prov) {
         const dists = UBIGEO[depto][prov] || [];
         for (const di of dists) {
           const din = normTxt(di);
-          if (suburb.includes(din) || din.includes(suburb) || city.includes(din)) { dist = di; break; }
+          if (distRaw.includes(din) || din.includes(distRaw) || provRaw.includes(din)) { dist = di; break; }
         }
       }
     }
@@ -1211,7 +1221,7 @@
     const token = Date.now();
     payContext.fwdToken = token;
     try {
-      const url = `https://nominatim.openstreetmap.org/search?format=jsonv2&limit=1&q=${encodeURIComponent(q)}&accept-language=es&countrycodes=pe`;
+      const url = `https://nominatim.openstreetmap.org/search?format=jsonv2&addressdetails=1&limit=1&q=${encodeURIComponent(q)}&accept-language=es&countrycodes=pe`;
       const res = await fetch(url, { headers: { "Accept": "application/json" } });
       if (!res.ok) return;
       const data = await res.json();
@@ -1219,6 +1229,19 @@
       if (data && data[0]) {
         payContext.syncFromForm = true;
         setMapLocation(parseFloat(data[0].lat), parseFloat(data[0].lon), { skipReverse: true });
+        const addr = data[0].address || {};
+        const m = matchUbigeo(addr);
+        if (m.depto && $("shipDepto") && !$("shipDepto").value) {
+          $("shipDepto").value = m.depto;
+          onDeptoChange(true);
+          if (m.prov && $("shipProv")) { $("shipProv").value = m.prov; onProvChange(true); }
+          if (m.dist) {
+            const distSel = $("shipDist");
+            const distTextWrap = $("distTextWrap");
+            if (distTextWrap && !distTextWrap.classList.contains("hidden") && $("shipDistText")) $("shipDistText").value = m.dist;
+            else if (distSel) distSel.value = m.dist;
+          }
+        }
         setTimeout(() => { if (payContext) payContext.syncFromForm = false; }, 0);
       }
     } catch (e) {}
@@ -1227,6 +1250,86 @@
   function scheduleForwardGeocode() {
     clearTimeout(fwdTimer);
     fwdTimer = setTimeout(forwardGeocode, 900);
+  }
+
+  let addrTimer = null;
+  function onAddressInput() {
+    clearTimeout(addrTimer);
+    const val = ($("shipAddress") ? $("shipAddress").value : "").trim();
+    if (val.length < 3) { hideAddrSuggestions(); return; }
+    addrTimer = setTimeout(() => searchAddressSuggestions(val), 350);
+    scheduleForwardGeocode();
+  }
+
+  async function searchAddressSuggestions(q) {
+    if (!payContext) return;
+    const depto = $("shipDepto") ? $("shipDepto").value : "";
+    const prov = $("shipProv") ? $("shipProv").value : "";
+    const dist = getSelectedDistrict();
+    const fullQ = [q, dist, prov, depto, "Perú"].filter(Boolean).join(", ");
+    const box = $("addrSuggestions");
+    if (box) { box.innerHTML = '<div class="addr-loading">Buscando direcciones...</div>'; box.classList.add("show"); }
+    const token = Date.now();
+    payContext.addrToken = token;
+    try {
+      const url = `https://nominatim.openstreetmap.org/search?format=jsonv2&addressdetails=1&limit=5&countrycodes=pe&accept-language=es&q=${encodeURIComponent(fullQ)}`;
+      const res = await fetch(url, { headers: { "Accept": "application/json" } });
+      if (!res.ok) { hideAddrSuggestions(); return; }
+      const data = await res.json();
+      if (!payContext || payContext.addrToken !== token) return;
+      renderAddrSuggestions(data || []);
+    } catch (e) { hideAddrSuggestions(); }
+  }
+
+  function renderAddrSuggestions(list) {
+    const box = $("addrSuggestions");
+    if (!box) return;
+    if (!payContext) return;
+    payContext.addrResults = list;
+    if (!list.length) { box.innerHTML = '<div class="addr-loading">No se encontraron resultados. Intenta con más detalle o marca en el mapa.</div>'; box.classList.add("show"); return; }
+    box.innerHTML = list.map((item, i) => {
+      const addr = item.address || {};
+      const road = addr.road || addr.pedestrian || addr.footway || addr.path || addr.neighbourhood || "";
+      const num = addr.house_number ? " " + addr.house_number : "";
+      const main = (road + num).trim() || (item.display_name || "").split(",")[0];
+      const sub = [addr.suburb || addr.city_district || addr.neighbourhood || "", addr.city || addr.town || addr.village || addr.county || "", addr.state || ""].filter(Boolean).join(", ");
+      return `<div class="addr-sug" onmousedown="event.preventDefault()" onclick="selectAddrSuggestion(${i})"><strong>${esc(main)}</strong><small>${esc(sub || item.display_name || "")}</small></div>`;
+    }).join("");
+    box.classList.add("show");
+  }
+
+  function hideAddrSuggestions() {
+    const box = $("addrSuggestions");
+    if (box) { box.classList.remove("show"); box.innerHTML = ""; }
+  }
+
+  function selectAddrSuggestion(i) {
+    if (!payContext || !payContext.addrResults || !payContext.addrResults[i]) return;
+    const item = payContext.addrResults[i];
+    hideAddrSuggestions();
+    clearTimeout(addrTimer);
+    clearTimeout(fwdTimer);
+    const lat = parseFloat(item.lat), lng = parseFloat(item.lon);
+    const addr = item.address || {};
+    const road = addr.road || addr.pedestrian || addr.footway || addr.path || "";
+    const num = addr.house_number ? " " + addr.house_number : "";
+    const line = (road + num).trim() || (item.display_name || "").split(",")[0] || "";
+    payContext.syncFromMap = true;
+    if ($("shipAddress")) $("shipAddress").value = line;
+    setMapLocation(lat, lng, { skipReverse: true });
+    const m = matchUbigeo(addr);
+    if (m.depto && $("shipDepto")) {
+      $("shipDepto").value = m.depto;
+      onDeptoChange(true);
+      if (m.prov && $("shipProv")) { $("shipProv").value = m.prov; onProvChange(true); }
+      if (m.dist) {
+        const distSel = $("shipDist");
+        const distTextWrap = $("distTextWrap");
+        if (distTextWrap && !distTextWrap.classList.contains("hidden") && $("shipDistText")) $("shipDistText").value = m.dist;
+        else if (distSel) distSel.value = m.dist;
+      }
+    }
+    setTimeout(() => { if (payContext) payContext.syncFromMap = false; }, 0);
   }
 
   function closePay() {
@@ -1371,6 +1474,7 @@
   $("detailBackdrop").addEventListener("click", closeDetail);
   $("payClose").addEventListener("click", closePay);
   $("payBackdrop").addEventListener("click", closePay);
+  document.addEventListener("click", (e) => { if (!e.target.closest(".addr-wrap")) hideAddrSuggestions(); });
 
   $("filters").addEventListener("click", (e) => {
     const chip = e.target.closest(".chip");
