@@ -962,11 +962,11 @@
             <select id="shipProv" onchange="onProvChange()" disabled><option value="">Provincia</option></select>
           </div>
           <div class="cf-input no-icon" id="distWrap">
-            <select id="shipDist" disabled><option value="">Distrito</option></select>
+            <select id="shipDist" disabled onchange="scheduleForwardGeocode()"><option value="">Distrito</option></select>
           </div>
         </div>
         <div id="distTextWrap" class="cf-input no-icon hidden" style="margin-top:10px;">
-          <input type="text" id="shipDistText" placeholder="Escribe tu distrito" />
+          <input type="text" id="shipDistText" placeholder="Escribe tu distrito" oninput="scheduleForwardGeocode()" />
         </div>
       </div>
 
@@ -974,7 +974,7 @@
         <label>Dirección exacta *</label>
         <div class="cf-input">
           <span class="cf-icon"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 10c0 7-9 13-9 13S3 17 3 10a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg></span>
-          <input type="text" id="shipAddress" placeholder="Av. / Jr. / Calle, N°, Mz/Lt" />
+          <input type="text" id="shipAddress" placeholder="Av. / Jr. / Calle, N°, Mz/Lt" oninput="scheduleForwardGeocode()" />
         </div>
       </div>
 
@@ -1023,7 +1023,7 @@
     if (shipNote) shipNote.classList.toggle("hidden", !(mode === "prepaid" && depto && depto !== "Lima" && depto !== "Callao"));
   }
 
-  function onDeptoChange() {
+  function onDeptoChange(fromMap) {
     const depto = $("shipDepto").value;
     const provSel = $("shipProv");
     const distSel = $("shipDist");
@@ -1032,6 +1032,7 @@
     distSel.innerHTML = '<option value="">Distrito</option>';
     distSel.disabled = true;
     if (distTextWrap) distTextWrap.classList.add("hidden");
+    $("distWrap").classList.remove("hidden");
     if (!depto || !UBIGEO[depto]) { provSel.disabled = true; return; }
     const provs = Object.keys(UBIGEO[depto]);
     provs.forEach(p => { const o = document.createElement("option"); o.value = p; o.textContent = p; provSel.appendChild(o); });
@@ -1044,9 +1045,10 @@
       selectPayMode("prepaid");
       $("shipNote").classList.remove("hidden");
     }
+    if (!fromMap) scheduleForwardGeocode();
   }
 
-  function onProvChange() {
+  function onProvChange(fromMap) {
     const depto = $("shipDepto").value;
     const prov = $("shipProv").value;
     const distSel = $("shipDist");
@@ -1063,8 +1065,9 @@
       $("distWrap").classList.add("hidden");
       if (distTextWrap) distTextWrap.classList.remove("hidden");
       const dt = $("shipDistText");
-      if (dt) dt.value = "";
+      if (dt && !fromMap) dt.value = "";
     }
+    if (!fromMap) scheduleForwardGeocode();
   }
 
   function getSelectedDistrict() {
@@ -1086,7 +1089,7 @@
     setTimeout(() => { try { map.invalidateSize(); } catch(e) {} }, 400);
   }
 
-  function setMapLocation(lat, lng) {
+  function setMapLocation(lat, lng, opts = {}) {
     if (!payContext || !payContext.map) return;
     payContext.location = { lat, lng };
     if (payContext.marker) {
@@ -1094,9 +1097,10 @@
     } else {
       payContext.marker = L.marker([lat, lng]).addTo(payContext.map);
     }
-    payContext.map.setView([lat, lng], 15);
+    payContext.map.setView([lat, lng], opts.zoom || 15);
     const st = $("mapStatus");
     if (st) { st.textContent = "✅ Ubicación seleccionada (" + lat.toFixed(5) + ", " + lng.toFixed(5) + ")"; st.classList.add("selected"); }
+    if (!opts.skipReverse) reverseGeocode(lat, lng);
   }
 
   function clearMapLocation() {
@@ -1118,7 +1122,115 @@
     );
   }
 
+  function normTxt(s) { return String(s || "").toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "").trim(); }
+
+  function matchUbigeo(addr) {
+    const state = normTxt(addr.state || addr.region || "");
+    const city = normTxt(addr.city || addr.town || addr.municipality || addr.county || "");
+    const suburb = normTxt(addr.suburb || addr.city_district || addr.neighbourhood || addr.quarter || addr.village || "");
+    let depto = "", prov = "", dist = "";
+
+    for (const d of Object.keys(UBIGEO)) {
+      const dn = normTxt(d);
+      if (state.includes(dn) || dn.includes(state)) { depto = d; break; }
+    }
+    if (!depto) {
+      for (const d of Object.keys(UBIGEO)) {
+        if (city.includes(normTxt(d)) || normTxt(d).includes(city)) { depto = d; break; }
+      }
+    }
+    if (depto) {
+      const provs = Object.keys(UBIGEO[depto]);
+      for (const p of provs) {
+        const pn = normTxt(p);
+        if (city.includes(pn) || pn.includes(city) || suburb.includes(pn)) { prov = p; break; }
+      }
+      if (!prov && provs.length) {
+        if (depto === "Lima") prov = "Lima";
+        else if (depto === "Callao") prov = "Callao";
+      }
+      if (prov) {
+        const dists = UBIGEO[depto][prov] || [];
+        for (const di of dists) {
+          const din = normTxt(di);
+          if (suburb.includes(din) || din.includes(suburb) || city.includes(din)) { dist = di; break; }
+        }
+      }
+    }
+    return { depto, prov, dist };
+  }
+
+  async function reverseGeocode(lat, lng) {
+    if (!payContext) return;
+    const token = Date.now();
+    payContext.revToken = token;
+    try {
+      const url = `https://nominatim.openstreetmap.org/reverse?format=jsonv2&lat=${lat}&lon=${lng}&addressdetails=1&accept-language=es`;
+      const res = await fetch(url, { headers: { "Accept": "application/json" } });
+      if (!res.ok) return;
+      const data = await res.json();
+      if (!payContext || payContext.revToken !== token) return;
+      const addr = data.address || {};
+      const road = addr.road || addr.pedestrian || addr.footway || addr.path || "";
+      const num = addr.house_number ? " " + addr.house_number : "";
+      const line = (road + num).trim();
+      if (line && $("shipAddress") && !payContext.syncFromForm) {
+        payContext.syncFromMap = true;
+        $("shipAddress").value = line;
+        setTimeout(() => { if (payContext) payContext.syncFromMap = false; }, 0);
+      }
+      const m = matchUbigeo(addr);
+      if (m.depto && $("shipDepto")) {
+        payContext.syncFromMap = true;
+        $("shipDepto").value = m.depto;
+        onDeptoChange(true);
+        if (m.prov && $("shipProv")) { $("shipProv").value = m.prov; onProvChange(true); }
+        if (m.dist) {
+          const distSel = $("shipDist");
+          const distTextWrap = $("distTextWrap");
+          if (distTextWrap && !distTextWrap.classList.contains("hidden") && $("shipDistText")) {
+            $("shipDistText").value = m.dist;
+          } else if (distSel) {
+            distSel.value = m.dist;
+          }
+        }
+        setTimeout(() => { if (payContext) payContext.syncFromMap = false; }, 0);
+      }
+    } catch (e) {}
+  }
+
+  let fwdTimer = null;
+  async function forwardGeocode() {
+    if (!payContext || payContext.syncFromMap) return;
+    const address = ($("shipAddress") ? $("shipAddress").value : "").trim();
+    const depto = $("shipDepto") ? $("shipDepto").value : "";
+    const prov = $("shipProv") ? $("shipProv").value : "";
+    const dist = getSelectedDistrict();
+    if (!address || address.length < 5) return;
+    const q = [address, dist, prov, depto, "Perú"].filter(Boolean).join(", ");
+    const token = Date.now();
+    payContext.fwdToken = token;
+    try {
+      const url = `https://nominatim.openstreetmap.org/search?format=jsonv2&limit=1&q=${encodeURIComponent(q)}&accept-language=es&countrycodes=pe`;
+      const res = await fetch(url, { headers: { "Accept": "application/json" } });
+      if (!res.ok) return;
+      const data = await res.json();
+      if (!payContext || payContext.fwdToken !== token) return;
+      if (data && data[0]) {
+        payContext.syncFromForm = true;
+        setMapLocation(parseFloat(data[0].lat), parseFloat(data[0].lon), { skipReverse: true });
+        setTimeout(() => { if (payContext) payContext.syncFromForm = false; }, 0);
+      }
+    } catch (e) {}
+  }
+
+  function scheduleForwardGeocode() {
+    clearTimeout(fwdTimer);
+    fwdTimer = setTimeout(forwardGeocode, 900);
+  }
+
   function closePay() {
+    clearTimeout(fwdTimer);
     if (payContext && payContext.map) { try { payContext.map.remove(); } catch(e) {} }
     $("payBackdrop").classList.remove("show");
     $("payModal").classList.remove("show");
