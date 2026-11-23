@@ -1221,15 +1221,16 @@
     const token = Date.now();
     payContext.fwdToken = token;
     try {
-      const url = `https://nominatim.openstreetmap.org/search?format=jsonv2&addressdetails=1&limit=1&q=${encodeURIComponent(q)}&accept-language=es&countrycodes=pe`;
-      const res = await fetch(url, { headers: { "Accept": "application/json" } });
-      if (!res.ok) return;
-      const data = await res.json();
+      let results = await searchNominatim(q);
       if (!payContext || payContext.fwdToken !== token) return;
-      if (data && data[0]) {
+      if (!results.length) {
+        results = await searchPhoton(q);
+        if (!payContext || payContext.fwdToken !== token) return;
+      }
+      if (results && results[0]) {
         payContext.syncFromForm = true;
-        setMapLocation(parseFloat(data[0].lat), parseFloat(data[0].lon), { skipReverse: true });
-        const addr = data[0].address || {};
+        setMapLocation(parseFloat(results[0].lat), parseFloat(results[0].lon), { skipReverse: true });
+        const addr = results[0].address || {};
         const m = matchUbigeo(addr);
         if (m.depto && $("shipDepto") && !$("shipDepto").value) {
           $("shipDepto").value = m.depto;
@@ -1261,23 +1262,74 @@
     scheduleForwardGeocode();
   }
 
+  function normalizePhoton(features) {
+    return (features || []).map(f => {
+      const p = f.properties || {};
+      const g = f.geometry || {};
+      const c = g.coordinates || [];
+      if (p.countrycode && String(p.countrycode).toUpperCase() !== "PE") return null;
+      return {
+        lat: String(c[1] || ""),
+        lon: String(c[0] || ""),
+        display_name: [p.name, p.street, p.housenumber, p.district, p.city, p.state, "Perú"].filter(Boolean).join(", "),
+        address: {
+          road: p.street || p.name || "",
+          house_number: p.housenumber || "",
+          suburb: p.district || p.locality || "",
+          city_district: p.district || "",
+          neighbourhood: p.locality || "",
+          city: p.city || "",
+          town: p.town || "",
+          village: p.village || "",
+          county: p.county || "",
+          state: p.state || ""
+        }
+      };
+    }).filter(x => x && x.lat && x.lon);
+  }
+
+  async function searchNominatim(q) {
+    const url = `https://nominatim.openstreetmap.org/search?format=jsonv2&addressdetails=1&limit=6&countrycodes=pe&accept-language=es&q=${encodeURIComponent(q)}`;
+    const res = await fetch(url, { headers: { "Accept": "application/json" } });
+    if (!res.ok) return [];
+    return await res.json();
+  }
+
+  async function searchPhoton(q) {
+    const url = `https://photon.komoot.io/api/?q=${encodeURIComponent(q)}&limit=6&lang=es&lat=-12.0464&lon=-77.0428`;
+    const res = await fetch(url, { headers: { "Accept": "application/json" } });
+    if (!res.ok) return [];
+    const data = await res.json();
+    return normalizePhoton((data && data.features) || []);
+  }
+
   async function searchAddressSuggestions(q) {
     if (!payContext) return;
     const depto = $("shipDepto") ? $("shipDepto").value : "";
     const prov = $("shipProv") ? $("shipProv").value : "";
     const dist = getSelectedDistrict();
     const fullQ = [q, dist, prov, depto, "Perú"].filter(Boolean).join(", ");
+    const simpleQ = [q, "Perú"].filter(Boolean).join(", ");
     const box = $("addrSuggestions");
     if (box) { box.innerHTML = '<div class="addr-loading">Buscando direcciones...</div>'; box.classList.add("show"); }
     const token = Date.now();
     payContext.addrToken = token;
     try {
-      const url = `https://nominatim.openstreetmap.org/search?format=jsonv2&addressdetails=1&limit=5&countrycodes=pe&accept-language=es&q=${encodeURIComponent(fullQ)}`;
-      const res = await fetch(url, { headers: { "Accept": "application/json" } });
-      if (!res.ok) { hideAddrSuggestions(); return; }
-      const data = await res.json();
+      let results = await searchNominatim(fullQ);
       if (!payContext || payContext.addrToken !== token) return;
-      renderAddrSuggestions(data || []);
+      if (!results.length && fullQ !== simpleQ) {
+        results = await searchNominatim(simpleQ);
+        if (!payContext || payContext.addrToken !== token) return;
+      }
+      if (!results.length) {
+        results = await searchPhoton(fullQ);
+        if (!payContext || payContext.addrToken !== token) return;
+      }
+      if (!results.length && fullQ !== simpleQ) {
+        results = await searchPhoton(simpleQ);
+        if (!payContext || payContext.addrToken !== token) return;
+      }
+      renderAddrSuggestions(results || []);
     } catch (e) { hideAddrSuggestions(); }
   }
 
