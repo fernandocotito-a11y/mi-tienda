@@ -344,6 +344,7 @@
         </div>
         <div class="toolbar">
           <input class="search" id="search" type="text" placeholder="Buscar producto..." />
+          <button class="btn btn-primary" onclick="downloadCatalog()" style="padding:10px 22px;font-size:0.85rem;">📥 Descargar catálogo PDF</button>
         </div>
         <div class="filters" id="filters"></div>
         <div style="height: 24px;"></div>
@@ -457,6 +458,7 @@
   <div class="toast" id="toast">Producto agregado ✓</div>
 
 <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 <script>
   const DEFAULT_CONTENT = {
     settings: {
@@ -1517,6 +1519,236 @@
     renderTestimonials();
     renderFaq();
     updateCart();
+  }
+
+  /* Catálogo PDF */
+  async function imgToDataURL(url, maxW = 600) {
+    if (!url) return null;
+    try {
+      const res = await fetch(url, { cache: "force-cache" });
+      if (!res.ok) return null;
+      const blob = await res.blob();
+      return await new Promise((resolve) => {
+        const objUrl = URL.createObjectURL(blob);
+        const img = new Image();
+        img.onload = () => {
+          try {
+            const scale = Math.min(1, maxW / img.width);
+            const w = Math.round(img.width * scale);
+            const h = Math.round(img.height * scale);
+            const c = document.createElement("canvas");
+            c.width = w; c.height = h;
+            const ctx = c.getContext("2d");
+            const isPng = (blob.type || "").includes("png");
+            if (!isPng) { ctx.fillStyle = "#ffffff"; ctx.fillRect(0, 0, w, h); }
+            ctx.drawImage(img, 0, 0, w, h);
+            URL.revokeObjectURL(objUrl);
+            resolve(c.toDataURL(isPng ? "image/png" : "image/jpeg", 0.82));
+          } catch (e) { URL.revokeObjectURL(objUrl); resolve(null); }
+        };
+        img.onerror = () => { URL.revokeObjectURL(objUrl); resolve(null); };
+        img.src = objUrl;
+      });
+    } catch (e) { return null; }
+  }
+
+  let catalogGenerating = false;
+  async function downloadCatalog() {
+    if (catalogGenerating) { showToast("Ya se está generando el catálogo..."); return; }
+    if (!window.jspdf || !window.jspdf.jsPDF) { showToast("No se pudo cargar el generador de PDF"); return; }
+    if (!CONTENT || !CONTENT.products || !CONTENT.products.length) { showToast("No hay productos para el catálogo"); return; }
+    catalogGenerating = true;
+    try {
+    showToast("Generando catálogo PDF...");
+    const { jsPDF } = window.jspdf;
+    const doc = new jsPDF({ unit: "mm", format: "a4" });
+    const pageW = 210, pageH = 297, margin = 14;
+    const accent = (CONTENT.settings.primaryColor || "#ff6f61");
+    const ink = "#1f2a33";
+    const soft = "#5f6b76";
+    const line = "#ddd6c9";
+    const products = CONTENT.products.slice();
+    const logoData = CONTENT.settings.logo ? await imgToDataURL(CONTENT.settings.logo, 400) : null;
+
+    // Preload product images (limited)
+    const imgMap = {};
+    const batch = 6;
+    for (let i = 0; i < products.length; i += batch) {
+      const slice = products.slice(i, i + batch);
+      await Promise.all(slice.map(async (p) => {
+        imgMap[p.name] = await imgToDataURL(p.image, 500);
+      }));
+    }
+
+    function drawHeader() {
+      doc.setFillColor(accent);
+      doc.rect(0, 0, pageW, 28, "F");
+      if (logoData) {
+        try { const fmt = logoData.startsWith("data:image/png") ? "PNG" : "JPEG"; doc.addImage(logoData, fmt, margin, 5, 18, 18, undefined, "FAST"); } catch(e) {}
+      }
+      doc.setTextColor(255,255,255);
+      doc.setFont("helvetica", "bold");
+      doc.setFontSize(20);
+      doc.text(CONTENT.settings.title || "Mi Tienda", logoData ? margin + 22 : margin, 12);
+      doc.setFont("helvetica", "normal");
+      doc.setFontSize(9.5);
+      doc.text(CONTENT.settings.tagline || "Catálogo de productos", logoData ? margin + 22 : margin, 18);
+      const date = new Date().toLocaleDateString("es-PE", { year:"numeric", month:"long", day:"numeric" });
+      doc.setFontSize(8.5);
+      doc.text(date, pageW - margin, 12, { align: "right" });
+      const wa = CONTENT.settings.whatsapp ? ("WhatsApp: +" + CONTENT.settings.whatsapp) : "";
+      if (wa) doc.text(wa, pageW - margin, 18, { align: "right" });
+    }
+
+    function drawFooter(page, total) {
+      doc.setDrawColor(line);
+      doc.line(margin, pageH - 10, pageW - margin, pageH - 10);
+      doc.setFont("helvetica", "normal");
+      doc.setFontSize(8);
+      doc.setTextColor(soft);
+      doc.text((CONTENT.settings.title || "Mi Tienda") + " · Catálogo", margin, pageH - 6);
+      doc.text("Página " + page + " / " + total, pageW - margin, pageH - 6, { align: "right" });
+    }
+
+    drawHeader();
+    let y = 36;
+    doc.setTextColor(ink);
+    doc.setFont("helvetica", "bold");
+    doc.setFontSize(14);
+    doc.text("Catálogo de productos", margin, y);
+    y += 2;
+    doc.setDrawColor(accent);
+    doc.setLineWidth(0.8);
+    doc.line(margin, y + 1, margin + 34, y + 1);
+    y += 8;
+
+    const colGap = 8;
+    const colW = (pageW - margin * 2 - colGap) / 2;
+    const cardH = 78;
+    let col = 0;
+    let pageNum = 1;
+    const pages = [1];
+
+    function ensureSpace(h) {
+      if (y + h > pageH - 16) {
+        doc.addPage();
+        pageNum++;
+        pages.push(pageNum);
+        drawHeader();
+        y = 36;
+        col = 0;
+      }
+    }
+
+    for (let i = 0; i < products.length; i++) {
+      const p = products[i];
+      ensureSpace(cardH);
+      const x = margin + col * (colW + colGap);
+      const cardY = y;
+
+      // card bg
+      doc.setDrawColor(line);
+      doc.setFillColor(252, 248, 242);
+      doc.roundedRect(x, cardY, colW, cardH, 2.5, 2.5, "FD");
+
+      // image
+      const imgX = x + 3;
+      const imgY = cardY + 3;
+      const imgW = 30;
+      const imgH = 38;
+      doc.setFillColor(255,255,255);
+      doc.roundedRect(imgX, imgY, imgW, imgH, 1.5, 1.5, "F");
+      const imgData = imgMap[p.name];
+      if (imgData) {
+        try { const fmt = imgData.startsWith("data:image/png") ? "PNG" : "JPEG"; doc.addImage(imgData, fmt, imgX, imgY, imgW, imgH, undefined, "FAST"); } catch(e) {}
+      } else {
+        doc.setTextColor(soft);
+        doc.setFontSize(7);
+        doc.text("Sin imagen", imgX + imgW/2, imgY + imgH/2, { align: "center" });
+      }
+
+      // badges
+      if (p.soldOut) {
+        doc.setFillColor(90,90,90);
+        doc.roundedRect(imgX, imgY, 18, 5, 1, 1, "F");
+        doc.setTextColor(255,255,255); doc.setFontSize(5.5); doc.setFont("helvetica","bold");
+        doc.text("AGOTADO", imgX + 9, imgY + 3.4, { align: "center" });
+      } else if (p.preventa) {
+        doc.setFillColor(243,156,18);
+        doc.roundedRect(imgX, imgY, 18, 5, 1, 1, "F");
+        doc.setTextColor(255,255,255); doc.setFontSize(5.5); doc.setFont("helvetica","bold");
+        doc.text("PREVENTA", imgX + 9, imgY + 3.4, { align: "center" });
+      }
+
+      // text
+      const tx = x + 36;
+      let ty = cardY + 7;
+      doc.setTextColor(soft);
+      doc.setFont("helvetica", "normal");
+      doc.setFontSize(6.5);
+      doc.text(((p.category || "") + "  ·  " + productCode(p)).toUpperCase(), tx, ty);
+      ty += 5;
+      doc.setTextColor(ink);
+      doc.setFont("helvetica", "bold");
+      doc.setFontSize(10);
+      const nameLines = doc.splitTextToSize(p.name || "", colW - 40);
+      doc.text(nameLines.slice(0,2), tx, ty);
+      ty += nameLines.slice(0,2).length * 4.2 + 1.5;
+
+      doc.setFont("helvetica", "bold");
+      doc.setFontSize(11);
+      doc.setTextColor(accent);
+      doc.text(money(p.price), tx, ty);
+      if (p.oldPrice && p.oldPrice > p.price) {
+        const pw = doc.getTextWidth(money(p.price));
+        doc.setFont("helvetica", "normal");
+        doc.setFontSize(8);
+        doc.setTextColor(150,150,150);
+        doc.text(money(p.oldPrice), tx + pw + 2, ty);
+      }
+      ty += 5;
+
+      if (p.sizes && p.sizes.length) {
+        doc.setFont("helvetica", "normal");
+        doc.setFontSize(7);
+        doc.setTextColor(soft);
+        doc.text("Tallas: " + p.sizes.join(", "), tx, ty);
+        ty += 4;
+      }
+      if (p.preventa) {
+        doc.setFont("helvetica", "normal");
+        doc.setFontSize(7);
+        doc.setTextColor(138,109,26);
+        doc.text("Preventa: envío en " + (p.diasPreventa || 15) + " días", tx, ty);
+      }
+
+      col++;
+      if (col >= 2) { col = 0; y += cardH + 6; }
+    }
+    if (col !== 0) y += cardH + 6;
+
+    // contact footer block on last page
+    ensureSpace(20);
+    doc.setFillColor(252,248,242);
+    doc.setDrawColor(line);
+    doc.roundedRect(margin, y, pageW - margin*2, 16, 2, 2, "FD");
+    doc.setFont("helvetica", "bold"); doc.setFontSize(9); doc.setTextColor(ink);
+    doc.text("Haz tu pedido por WhatsApp", margin + 4, y + 6);
+    doc.setFont("helvetica", "normal"); doc.setFontSize(8); doc.setTextColor(soft);
+    const contact = [CONTENT.settings.whatsapp ? ("+" + CONTENT.settings.whatsapp) : "", CONTENT.settings.instagram ? ("@" + CONTENT.settings.instagram) : "", CONTENT.settings.email || ""].filter(Boolean).join("   |   ");
+    doc.text(contact || "Contáctanos para más información", margin + 4, y + 11);
+
+    const totalPages = doc.getNumberOfPages();
+    for (let i = 1; i <= totalPages; i++) {
+      doc.setPage(i);
+      drawFooter(i, totalPages);
+    }
+
+    const name = (CONTENT.settings.title || "catalogo").toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, "");
+    doc.save(name + "-catalogo.pdf");
+    showToast("Catálogo descargado ✓");
+    } catch (e) { console.error(e); showToast("No se pudo generar el catálogo"); }
+    finally { catalogGenerating = false; }
   }
 
   $("openCart").addEventListener("click", openCart);
