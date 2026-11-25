@@ -1522,6 +1522,16 @@
   }
 
   /* Catálogo PDF */
+  async function getImageDims(dataUrl) {
+    if (!dataUrl) return null;
+    return await new Promise((resolve) => {
+      const img = new Image();
+      img.onload = () => resolve({ w: img.naturalWidth || img.width, h: img.naturalHeight || img.height });
+      img.onerror = () => resolve(null);
+      img.src = dataUrl;
+    });
+  }
+
   async function imgToDataURL(url, maxW = 600) {
     if (!url) return null;
     try {
@@ -1569,6 +1579,7 @@
     const line = "#ddd6c9";
     const products = CONTENT.products.slice();
     const logoData = CONTENT.settings.logo ? await imgToDataURL(CONTENT.settings.logo, 400) : null;
+    const logoDims = logoData ? await getImageDims(logoData) : null;
 
     // Preload product images (limited)
     const imgMap = {};
@@ -1585,10 +1596,23 @@
     function drawHeaderFirst() {
       doc.setFillColor(accent);
       doc.rect(0, 0, pageW, 42, "F");
+      let logoW = 0;
       if (logoData) {
-        try { const fmt = logoData.startsWith("data:image/png") ? "PNG" : "JPEG"; doc.addImage(logoData, fmt, margin, 6, 22, 22, undefined, "FAST"); } catch(e) {}
+        try {
+          const fmt = logoData.startsWith("data:image/png") ? "PNG" : "JPEG";
+          const maxW = 30, maxH = 22;
+          let dw = maxH, dh = maxH;
+          if (logoDims && logoDims.w && logoDims.h) {
+            const r = Math.min(maxW / logoDims.w, maxH / logoDims.h);
+            dw = logoDims.w * r; dh = logoDims.h * r;
+          }
+          const lx = margin;
+          const ly = 6 + (maxH - dh) / 2;
+          doc.addImage(logoData, fmt, lx, ly, dw, dh, undefined, "FAST");
+          logoW = dw;
+        } catch(e) {}
       }
-      const textX = logoData ? margin + 26 : margin;
+      const textX = logoData ? margin + logoW + 4 : margin;
       doc.setTextColor(255,255,255);
       doc.setFont("helvetica", "bold");
       doc.setFontSize(22);
@@ -1607,10 +1631,23 @@
     function drawHeaderCompact() {
       doc.setFillColor(accent);
       doc.rect(0, 0, pageW, 20, "F");
+      let logoW = 0;
       if (logoData) {
-        try { const fmt = logoData.startsWith("data:image/png") ? "PNG" : "JPEG"; doc.addImage(logoData, fmt, margin, 3, 14, 14, undefined, "FAST"); } catch(e) {}
+        try {
+          const fmt = logoData.startsWith("data:image/png") ? "PNG" : "JPEG";
+          const maxW = 22, maxH = 14;
+          let dw = maxH, dh = maxH;
+          if (logoDims && logoDims.w && logoDims.h) {
+            const r = Math.min(maxW / logoDims.w, maxH / logoDims.h);
+            dw = logoDims.w * r; dh = logoDims.h * r;
+          }
+          const lx = margin;
+          const ly = 3 + (maxH - dh) / 2;
+          doc.addImage(logoData, fmt, lx, ly, dw, dh, undefined, "FAST");
+          logoW = dw;
+        } catch(e) {}
       }
-      const textX = logoData ? margin + 18 : margin;
+      const textX = logoData ? margin + logoW + 4 : margin;
       doc.setTextColor(255,255,255);
       doc.setFont("helvetica", "bold");
       doc.setFontSize(12);
