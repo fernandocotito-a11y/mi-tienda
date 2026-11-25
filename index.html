@@ -1635,31 +1635,31 @@
     }
 
     drawHeaderFirst();
-    let y = 50;
+    let y = 48;
     doc.setTextColor(ink);
     doc.setFont("helvetica", "bold");
-    doc.setFontSize(14);
+    doc.setFontSize(13);
     doc.text("Catálogo de productos", margin, y);
     y += 2;
     doc.setDrawColor(accent);
     doc.setLineWidth(0.8);
     doc.line(margin, y + 1, margin + 34, y + 1);
-    y += 8;
+    y += 6;
 
-    const colGap = 8;
+    const colGap = 7;
     const colW = (pageW - margin * 2 - colGap) / 2;
-    const cardH = 60;
+    const cardH = 48;
     let col = 0;
     let pageNum = 1;
     const pages = [1];
 
     function ensureSpace(h) {
-      if (y + h > pageH - 16) {
+      if (y + h > pageH - 15) {
         doc.addPage();
         pageNum++;
         pages.push(pageNum);
         drawHeaderCompact();
-        y = 28;
+        y = 26;
         col = 0;
       }
     }
@@ -1738,18 +1738,18 @@
       doc.setFont("helvetica","normal");
       doc.setFontSize(6);
       doc.text(fitText(meta, maxW, 6, "normal"), tx, ty);
-      ty += 5.5;
+      ty += 4.8;
 
       doc.setTextColor(ink);
       doc.setFont("helvetica","bold");
-      doc.setFontSize(9.2);
+      doc.setFontSize(9);
       const nameLines = doc.splitTextToSize(cleanName(p.name || ""), maxW);
       const linesToDraw = nameLines.slice(0, 3);
       if (linesToDraw.length === 3 && nameLines.length > 3) {
-        linesToDraw[2] = fitText(nameLines.slice(2).join(" "), maxW, 9.2, "bold");
+        linesToDraw[2] = fitText(nameLines.slice(2).join(" "), maxW, 9, "bold");
       }
-      linesToDraw.forEach((ln, idx) => { doc.text(ln, tx, ty); if (idx < linesToDraw.length - 1) ty += 4.1; });
-      ty += 5.8;
+      linesToDraw.forEach((ln, idx) => { doc.text(ln, tx, ty); if (idx < linesToDraw.length - 1) ty += 3.9; });
+      ty += 5.2;
 
       doc.setFont("helvetica","bold");
       doc.setFontSize(11);
@@ -1769,7 +1769,7 @@
         doc.setLineWidth(0.3);
         doc.line(oldX, ty - 1.2, oldX + ow, ty - 1.2);
       }
-      ty += 5.4;
+      ty += 4.8;
 
       const sizes = Array.isArray(p.sizes) ? p.sizes.filter(Boolean) : [];
       const isAccessory = cleanCategory(p.category) === "ACCESORIOS";
@@ -1781,7 +1781,7 @@
       doc.setFont("helvetica","normal");
       doc.setFontSize(6.8);
       doc.text(fitText(sizeText, maxW, 6.8, "normal"), tx, ty);
-      ty += 4.3;
+      ty += 4.0;
 
       if (p.preventa) {
         doc.setTextColor(138,109,26);
@@ -1796,9 +1796,9 @@
       }
 
       col++;
-      if (col >= 2) { col = 0; y += cardH + 5; }
+      if (col >= 2) { col = 0; y += cardH + 4; }
     }
-    if (col !== 0) y += cardH + 5;
+    if (col !== 0) y += cardH + 4;
 
     // Footer CTA se agrega en todas las páginas en el bucle inferior.
     const totalPages = doc.getNumberOfPages();
