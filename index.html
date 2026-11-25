@@ -1580,6 +1580,7 @@
     const products = CONTENT.products.slice();
     const logoData = CONTENT.settings.logo ? await imgToDataURL(CONTENT.settings.logo, 400) : null;
     const logoDims = logoData ? await getImageDims(logoData) : null;
+    const bgData = await imgToDataURL("https://images.unsplash.com/photo-1507525428034-b723cf961d3e?auto=format&fit=crop&w=1200&q=60", 1200);
 
     // Preload product images (limited)
     const imgMap = {};
@@ -1593,42 +1594,96 @@
 
     const catalogTagline = "Todo lo que buscas, al mejor precio y al alcance de un clic. Variedad, calidad y los mejores precios directo a tu puerta.";
 
+    function drawPageBackground() {
+      doc.setFillColor(252, 250, 245);
+      doc.rect(0, 0, pageW, pageH, "F");
+      if (bgData) {
+        try {
+          doc.saveGraphicsState();
+          doc.setGState(new doc.GState({ opacity: 0.08 }));
+          const fmt = bgData.startsWith("data:image/png") ? "PNG" : "JPEG";
+          doc.addImage(bgData, fmt, 0, 0, pageW, pageH, undefined, "FAST");
+          doc.restoreGraphicsState();
+        } catch (e) {
+          try { doc.setGState(new doc.GState({ opacity: 1 })); } catch (_) {}
+        }
+      }
+      // soft decorative blobs
+      try {
+        doc.saveGraphicsState();
+        doc.setGState(new doc.GState({ opacity: 0.06 }));
+        doc.setFillColor(255, 190, 170);
+        doc.circle(pageW - 18, 34, 26, "F");
+        doc.setFillColor(173, 216, 230);
+        doc.circle(18, pageH - 30, 24, "F");
+        doc.restoreGraphicsState();
+      } catch (e) { try { doc.restoreGraphicsState(); } catch (_) {} }
+    }
+
     function drawHeaderFirst() {
+      drawPageBackground();
+      // hero banner
+      if (bgData) {
+        try {
+          const fmt = bgData.startsWith("data:image/png") ? "PNG" : "JPEG";
+          doc.addImage(bgData, fmt, 0, 0, pageW, 52, undefined, "FAST");
+        } catch (e) {}
+      } else {
+        doc.setFillColor(accent);
+        doc.rect(0, 0, pageW, 52, "F");
+      }
+      try {
+        doc.saveGraphicsState();
+        doc.setGState(new doc.GState({ opacity: 0.45 }));
+        doc.setFillColor(20, 40, 55);
+        doc.rect(0, 0, pageW, 52, "F");
+        doc.restoreGraphicsState();
+      } catch (e) { try { doc.restoreGraphicsState(); } catch (_) {} }
+      // accent line
       doc.setFillColor(accent);
-      doc.rect(0, 0, pageW, 42, "F");
+      doc.rect(0, 52, pageW, 1.8, "F");
+
       let logoW = 0;
       if (logoData) {
         try {
           const fmt = logoData.startsWith("data:image/png") ? "PNG" : "JPEG";
-          const maxW = 30, maxH = 22;
+          const maxW = 32, maxH = 24;
           let dw = maxH, dh = maxH;
           if (logoDims && logoDims.w && logoDims.h) {
             const r = Math.min(maxW / logoDims.w, maxH / logoDims.h);
             dw = logoDims.w * r; dh = logoDims.h * r;
           }
           const lx = margin;
-          const ly = 6 + (maxH - dh) / 2;
+          const ly = 8 + (maxH - dh) / 2;
+          // white pill behind logo for clarity
+          try { doc.saveGraphicsState(); doc.setGState(new doc.GState({ opacity: 0.95 })); doc.setFillColor(255,255,255); doc.roundedRect(lx - 1.5, ly - 1.5, dw + 3, dh + 3, 2, 2, "F"); doc.restoreGraphicsState(); } catch(_) { try{doc.restoreGraphicsState();}catch(__){} }
           doc.addImage(logoData, fmt, lx, ly, dw, dh, undefined, "FAST");
           logoW = dw;
         } catch(e) {}
       }
-      const textX = logoData ? margin + logoW + 4 : margin;
+      const textX = logoData ? margin + logoW + 6 : margin;
       doc.setTextColor(255,255,255);
       doc.setFont("helvetica", "bold");
-      doc.setFontSize(22);
-      doc.text(CONTENT.settings.title || "Mi Tienda", textX, 14);
+      doc.setFontSize(24);
+      doc.text(CONTENT.settings.title || "Mi Tienda", textX, 17);
       doc.setFont("helvetica", "normal");
-      doc.setFontSize(9);
-      const tagLines = doc.splitTextToSize(catalogTagline, pageW - textX - margin - 45);
-      doc.text(tagLines.slice(0, 3), textX, 21);
-      const date = new Date().toLocaleDateString("es-PE", { year:"numeric", month:"long", day:"numeric" });
+      doc.setFontSize(9.5);
+      const tagLines = doc.splitTextToSize(catalogTagline, pageW - textX - margin - 5);
+      doc.text(tagLines.slice(0, 3), textX, 24);
+      doc.setFont("helvetica", "bold");
       doc.setFontSize(8.5);
-      doc.text(date, pageW - margin, 12, { align: "right" });
+      doc.setTextColor(255, 235, 225);
+      doc.text("COLECCIÓN  ·  VERANO  ·  ESTILO", textX, 39);
+      const date = new Date().toLocaleDateString("es-PE", { year:"numeric", month:"long", day:"numeric" });
+      doc.setFont("helvetica", "normal");
       doc.setFontSize(8);
-      doc.text("Catálogo oficial", pageW - margin, 18, { align: "right" });
+      doc.setTextColor(240,240,240);
+      doc.text(date, pageW - margin, 12, { align: "right" });
+      doc.text("Catálogo digital", pageW - margin, 17, { align: "right" });
     }
 
     function drawHeaderCompact() {
+      drawPageBackground();
       doc.setFillColor(accent);
       doc.rect(0, 0, pageW, 20, "F");
       let logoW = 0;
@@ -1672,16 +1727,20 @@
     }
 
     drawHeaderFirst();
-    let y = 48;
+    let y = 61;
     doc.setTextColor(ink);
     doc.setFont("helvetica", "bold");
-    doc.setFontSize(13);
-    doc.text("Catálogo de productos", margin, y);
-    y += 2;
+    doc.setFontSize(14);
+    doc.text("Nuestros productos", margin, y);
+    doc.setFont("helvetica", "normal");
+    doc.setFontSize(8.5);
+    doc.setTextColor(soft);
+    doc.text("Selección actual disponible en tienda", margin + 52, y);
+    y += 2.5;
     doc.setDrawColor(accent);
-    doc.setLineWidth(0.8);
-    doc.line(margin, y + 1, margin + 34, y + 1);
-    y += 6;
+    doc.setLineWidth(0.9);
+    doc.line(margin, y + 1, margin + 42, y + 1);
+    y += 7;
 
     const colGap = 7;
     const colW = (pageW - margin * 2 - colGap) / 2;
@@ -1731,9 +1790,12 @@
       const x = margin + col * (colW + colGap);
       const cardY = y;
 
-      doc.setDrawColor(line);
+      doc.setDrawColor(230, 224, 214);
       doc.setFillColor(255, 255, 255);
-      doc.roundedRect(x, cardY, colW, cardH, 2, 2, "FD");
+      doc.roundedRect(x, cardY, colW, cardH, 2.5, 2.5, "FD");
+      doc.setFillColor(accent);
+      doc.roundedRect(x, cardY, colW, 1.2, 2.5, 2.5, "F");
+      doc.rect(x, cardY + 0.6, colW, 0.6, "F");
 
       const pad = 3;
       const imgX = x + pad;
