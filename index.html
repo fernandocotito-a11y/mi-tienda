@@ -1624,7 +1624,7 @@
 
     const colGap = 8;
     const colW = (pageW - margin * 2 - colGap) / 2;
-    const cardH = 78;
+    const cardH = 54;
     let col = 0;
     let pageNum = 1;
     const pages = [1];
@@ -1640,92 +1640,113 @@
       }
     }
 
+    function fitText(text, maxW, fontSize, fontStyle) {
+      doc.setFont("helvetica", fontStyle || "normal");
+      doc.setFontSize(fontSize);
+      let t = String(text || "");
+      if (doc.getTextWidth(t) <= maxW) return t;
+      while (t.length > 0 && doc.getTextWidth(t + "…") > maxW) t = t.slice(0, -1);
+      return t.trim() + "…";
+    }
+
     for (let i = 0; i < products.length; i++) {
       const p = products[i];
       ensureSpace(cardH);
       const x = margin + col * (colW + colGap);
       const cardY = y;
 
-      // card bg
       doc.setDrawColor(line);
-      doc.setFillColor(252, 248, 242);
-      doc.roundedRect(x, cardY, colW, cardH, 2.5, 2.5, "FD");
+      doc.setFillColor(255, 255, 255);
+      doc.roundedRect(x, cardY, colW, cardH, 2, 2, "FD");
 
-      // image
-      const imgX = x + 3;
-      const imgY = cardY + 3;
-      const imgW = 30;
-      const imgH = 38;
-      doc.setFillColor(255,255,255);
+      const pad = 3;
+      const imgX = x + pad;
+      const imgY = cardY + pad;
+      const imgW = 28;
+      const imgH = cardH - pad * 2;
+      doc.setFillColor(246,239,230);
       doc.roundedRect(imgX, imgY, imgW, imgH, 1.5, 1.5, "F");
       const imgData = imgMap[p.name];
       if (imgData) {
         try { const fmt = imgData.startsWith("data:image/png") ? "PNG" : "JPEG"; doc.addImage(imgData, fmt, imgX, imgY, imgW, imgH, undefined, "FAST"); } catch(e) {}
       } else {
         doc.setTextColor(soft);
-        doc.setFontSize(7);
+        doc.setFont("helvetica","normal");
+        doc.setFontSize(6.5);
         doc.text("Sin imagen", imgX + imgW/2, imgY + imgH/2, { align: "center" });
       }
 
-      // badges
       if (p.soldOut) {
         doc.setFillColor(90,90,90);
-        doc.roundedRect(imgX, imgY, 18, 5, 1, 1, "F");
-        doc.setTextColor(255,255,255); doc.setFontSize(5.5); doc.setFont("helvetica","bold");
-        doc.text("AGOTADO", imgX + 9, imgY + 3.4, { align: "center" });
+        doc.roundedRect(imgX, imgY, 18, 4.5, 1, 1, "F");
+        doc.setTextColor(255,255,255); doc.setFontSize(5.2); doc.setFont("helvetica","bold");
+        doc.text("AGOTADO", imgX + 9, imgY + 3.1, { align: "center" });
       } else if (p.preventa) {
         doc.setFillColor(243,156,18);
-        doc.roundedRect(imgX, imgY, 18, 5, 1, 1, "F");
-        doc.setTextColor(255,255,255); doc.setFontSize(5.5); doc.setFont("helvetica","bold");
-        doc.text("PREVENTA", imgX + 9, imgY + 3.4, { align: "center" });
+        doc.roundedRect(imgX, imgY, 18, 4.5, 1, 1, "F");
+        doc.setTextColor(255,255,255); doc.setFontSize(5.2); doc.setFont("helvetica","bold");
+        doc.text("PREVENTA", imgX + 9, imgY + 3.1, { align: "center" });
       }
 
-      // text
-      const tx = x + 36;
-      let ty = cardY + 7;
-      doc.setTextColor(soft);
-      doc.setFont("helvetica", "normal");
-      doc.setFontSize(6.5);
-      doc.text(((p.category || "") + "  ·  " + productCode(p)).toUpperCase(), tx, ty);
-      ty += 5;
-      doc.setTextColor(ink);
-      doc.setFont("helvetica", "bold");
-      doc.setFontSize(10);
-      const nameLines = doc.splitTextToSize(p.name || "", colW - 40);
-      doc.text(nameLines.slice(0,2), tx, ty);
-      ty += nameLines.slice(0,2).length * 4.2 + 1.5;
+      const tx = imgX + imgW + 4;
+      const maxW = x + colW - pad - tx;
+      let ty = cardY + 7.5;
 
-      doc.setFont("helvetica", "bold");
+      doc.setTextColor(soft);
+      doc.setFont("helvetica","normal");
+      doc.setFontSize(6);
+      doc.text(fitText(((p.category || "") + " · " + productCode(p)).toUpperCase(), maxW, 6, "normal"), tx, ty);
+      ty += 5.5;
+
+      doc.setTextColor(ink);
+      doc.setFont("helvetica","bold");
+      doc.setFontSize(9.5);
+      const nameLines = doc.splitTextToSize(p.name || "", maxW);
+      const n1 = nameLines[0] || "";
+      const n2 = nameLines[1] ? fitText(nameLines.slice(1).join(" "), maxW, 9.5, "bold") : "";
+      doc.text(n1, tx, ty);
+      if (n2) { ty += 4.2; doc.text(n2, tx, ty); }
+      ty += 6;
+
+      doc.setFont("helvetica","bold");
       doc.setFontSize(11);
       doc.setTextColor(accent);
-      doc.text(money(p.price), tx, ty);
+      const priceTxt = money(p.price);
+      doc.text(priceTxt, tx, ty);
       if (p.oldPrice && p.oldPrice > p.price) {
-        const pw = doc.getTextWidth(money(p.price));
-        doc.setFont("helvetica", "normal");
-        doc.setFontSize(8);
+        const pw = doc.getTextWidth(priceTxt);
+        doc.setFont("helvetica","normal");
+        doc.setFontSize(7.5);
         doc.setTextColor(150,150,150);
-        doc.text(money(p.oldPrice), tx + pw + 2, ty);
+        const oldTxt = fitText(money(p.oldPrice), Math.max(8, maxW - pw - 2), 7.5, "normal");
+        doc.text(oldTxt, tx + pw + 2, ty);
       }
-      ty += 5;
+      ty += 5.2;
 
       if (p.sizes && p.sizes.length) {
-        doc.setFont("helvetica", "normal");
-        doc.setFontSize(7);
         doc.setTextColor(soft);
-        doc.text("Tallas: " + p.sizes.join(", "), tx, ty);
-        ty += 4;
+        doc.setFont("helvetica","normal");
+        doc.setFontSize(6.8);
+        doc.text(fitText("Tallas: " + p.sizes.join(", "), maxW, 6.8, "normal"), tx, ty);
+        ty += 4.2;
       }
+
       if (p.preventa) {
-        doc.setFont("helvetica", "normal");
-        doc.setFontSize(7);
         doc.setTextColor(138,109,26);
-        doc.text("Preventa: envío en " + (p.diasPreventa || 15) + " días", tx, ty);
+        doc.setFont("helvetica","normal");
+        doc.setFontSize(6.8);
+        doc.text(fitText("Preventa: envío en " + (p.diasPreventa || 15) + " días", maxW, 6.8, "normal"), tx, ty);
+      } else if (p.soldOut) {
+        doc.setTextColor(150,80,80);
+        doc.setFont("helvetica","normal");
+        doc.setFontSize(6.8);
+        doc.text(fitText("Producto agotado", maxW, 6.8, "normal"), tx, ty);
       }
 
       col++;
-      if (col >= 2) { col = 0; y += cardH + 6; }
+      if (col >= 2) { col = 0; y += cardH + 5; }
     }
-    if (col !== 0) y += cardH + 6;
+    if (col !== 0) y += cardH + 5;
 
     // contact footer block on last page
     ensureSpace(20);
