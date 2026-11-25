@@ -31,8 +31,8 @@ collections:
               - { label: "Foto principal", name: "image", widget: "image", hint: "Sube la foto principal del producto (la que aparece en la grilla)" }
               - { label: "Precio", name: "price", widget: "number", value_type: "float", hint: "Solo el número, sin símbolo. Ej: 89.90" }
               - { label: "Precio anterior (oferta)", name: "oldPrice", widget: "number", value_type: "float", required: false, hint: "Opcional. Se muestra tachado junto al precio" }
-              - { label: "Categoría", name: "category", widget: "select", options: ["Bikini", "Accesorios"], default: "Bikini", hint: "Elige la categoría (sirve para los filtros de la tienda)" }
-              - { label: "Tallas disponibles", name: "sizes", widget: "select", multiple: true, options: ["S", "M", "L", "XL"], required: false, hint: "Solo aparece en ropa. Marca las tallas que tienes en stock", condition: { field: "category", value: "Bikini" } }
+              - { label: "Categoría", name: "category", widget: "select", options: ["Bikini", "Vestidos", "Salida de playa", "Accesorios"], default: "Bikini", hint: "Elige la categoría (sirve para los filtros de la tienda)" }
+              - { label: "Tallas disponibles", name: "sizes", widget: "select", multiple: true, options: ["S", "M", "L", "XL", "Única"], required: false, hint: "Marca las tallas disponibles. Para accesorios usa 'Única'." }
               - { label: "Descripción", name: "description", widget: "text", required: false }
               - { label: "Fotos adicionales", name: "images", widget: "list", required: false, collapsed: true, summary: "Foto {{fields.image}}", fields: [{ label: "Foto", name: "image", widget: "image" }], hint: "Sube fotos extra del producto. Se verán como galería en el detalle." }
               - { label: "Agotado", name: "soldOut", widget: "boolean", default: false, hint: "Marca si no hay stock disponible" }

@@ -1580,38 +1580,62 @@
       }));
     }
 
-    function drawHeader() {
+    const catalogTagline = "Todo lo que buscas, al mejor precio y al alcance de un clic. Variedad, calidad y los mejores precios directo a tu puerta.";
+
+    function drawHeaderFirst() {
       doc.setFillColor(accent);
-      doc.rect(0, 0, pageW, 28, "F");
+      doc.rect(0, 0, pageW, 42, "F");
       if (logoData) {
-        try { const fmt = logoData.startsWith("data:image/png") ? "PNG" : "JPEG"; doc.addImage(logoData, fmt, margin, 5, 18, 18, undefined, "FAST"); } catch(e) {}
+        try { const fmt = logoData.startsWith("data:image/png") ? "PNG" : "JPEG"; doc.addImage(logoData, fmt, margin, 6, 22, 22, undefined, "FAST"); } catch(e) {}
       }
+      const textX = logoData ? margin + 26 : margin;
       doc.setTextColor(255,255,255);
       doc.setFont("helvetica", "bold");
-      doc.setFontSize(20);
-      doc.text(CONTENT.settings.title || "Mi Tienda", logoData ? margin + 22 : margin, 12);
+      doc.setFontSize(22);
+      doc.text(CONTENT.settings.title || "Mi Tienda", textX, 14);
       doc.setFont("helvetica", "normal");
-      doc.setFontSize(9.5);
-      doc.text(CONTENT.settings.tagline || "Catálogo de productos", logoData ? margin + 22 : margin, 18);
+      doc.setFontSize(9);
+      const tagLines = doc.splitTextToSize(catalogTagline, pageW - textX - margin - 45);
+      doc.text(tagLines.slice(0, 3), textX, 21);
       const date = new Date().toLocaleDateString("es-PE", { year:"numeric", month:"long", day:"numeric" });
       doc.setFontSize(8.5);
       doc.text(date, pageW - margin, 12, { align: "right" });
-      const wa = CONTENT.settings.whatsapp ? ("WhatsApp: +" + CONTENT.settings.whatsapp) : "";
-      if (wa) doc.text(wa, pageW - margin, 18, { align: "right" });
+      doc.setFontSize(8);
+      doc.text("Catálogo oficial", pageW - margin, 18, { align: "right" });
+    }
+
+    function drawHeaderCompact() {
+      doc.setFillColor(accent);
+      doc.rect(0, 0, pageW, 20, "F");
+      if (logoData) {
+        try { const fmt = logoData.startsWith("data:image/png") ? "PNG" : "JPEG"; doc.addImage(logoData, fmt, margin, 3, 14, 14, undefined, "FAST"); } catch(e) {}
+      }
+      const textX = logoData ? margin + 18 : margin;
+      doc.setTextColor(255,255,255);
+      doc.setFont("helvetica", "bold");
+      doc.setFontSize(12);
+      doc.text(CONTENT.settings.title || "Mi Tienda", textX, 11.5);
+      doc.setFont("helvetica", "normal");
+      doc.setFontSize(8);
+      const date = new Date().toLocaleDateString("es-PE", { year:"numeric", month:"long", day:"numeric" });
+      doc.text(date, pageW - margin, 11.5, { align: "right" });
     }
 
     function drawFooter(page, total) {
       doc.setDrawColor(line);
-      doc.line(margin, pageH - 10, pageW - margin, pageH - 10);
+      doc.line(margin, pageH - 11, pageW - margin, pageH - 11);
       doc.setFont("helvetica", "normal");
-      doc.setFontSize(8);
+      doc.setFontSize(7.8);
       doc.setTextColor(soft);
-      doc.text((CONTENT.settings.title || "Mi Tienda") + " · Catálogo", margin, pageH - 6);
-      doc.text("Página " + page + " / " + total, pageW - margin, pageH - 6, { align: "right" });
+      const waText = "Haz tu pedido por WhatsApp: +51 977 549 354";
+      doc.setTextColor(accent);
+      doc.textWithLink(waText, margin, pageH - 6.5, { url: "https://wa.me/51977549354" });
+      doc.setTextColor(soft);
+      doc.text("Página " + page + "/" + total, pageW - margin, pageH - 6.5, { align: "right" });
     }
 
-    drawHeader();
-    let y = 36;
+    drawHeaderFirst();
+    let y = 50;
     doc.setTextColor(ink);
     doc.setFont("helvetica", "bold");
     doc.setFontSize(14);
@@ -1624,7 +1648,7 @@
 
     const colGap = 8;
     const colW = (pageW - margin * 2 - colGap) / 2;
-    const cardH = 54;
+    const cardH = 60;
     let col = 0;
     let pageNum = 1;
     const pages = [1];
@@ -1634,8 +1658,8 @@
         doc.addPage();
         pageNum++;
         pages.push(pageNum);
-        drawHeader();
-        y = 36;
+        drawHeaderCompact();
+        y = 28;
         col = 0;
       }
     }
@@ -1647,6 +1671,21 @@
       if (doc.getTextWidth(t) <= maxW) return t;
       while (t.length > 0 && doc.getTextWidth(t + "…") > maxW) t = t.slice(0, -1);
       return t.trim() + "…";
+    }
+
+    function cleanName(name) {
+      let s = String(name || "").trim().replace(/\s+/g, " ");
+      s = s.replace(/,\s*$/, "");
+      s = s.replace(/\boaisis\b/gi, "Oasis");
+      s = s.replace(/\btrez\b/gi, "tres");
+      if (s.length) s = s.charAt(0).toUpperCase() + s.slice(1);
+      return s;
+    }
+
+    function cleanCategory(cat) {
+      let c = String(cat || "").trim().replace(/[.\-–—]+\s*$/g, "").replace(/\s+/g, " ");
+      if (!c) return "PRODUCTO";
+      return c.toUpperCase();
     }
 
     for (let i = 0; i < products.length; i++) {
@@ -1692,21 +1731,25 @@
       const maxW = x + colW - pad - tx;
       let ty = cardY + 7.5;
 
+      const catLabel = cleanCategory(p.category);
+      const codeLabel = String(productCode(p) || "").trim().toUpperCase();
+      const meta = catLabel + " · " + codeLabel;
       doc.setTextColor(soft);
       doc.setFont("helvetica","normal");
       doc.setFontSize(6);
-      doc.text(fitText(((p.category || "") + " · " + productCode(p)).toUpperCase(), maxW, 6, "normal"), tx, ty);
+      doc.text(fitText(meta, maxW, 6, "normal"), tx, ty);
       ty += 5.5;
 
       doc.setTextColor(ink);
       doc.setFont("helvetica","bold");
-      doc.setFontSize(9.5);
-      const nameLines = doc.splitTextToSize(p.name || "", maxW);
-      const n1 = nameLines[0] || "";
-      const n2 = nameLines[1] ? fitText(nameLines.slice(1).join(" "), maxW, 9.5, "bold") : "";
-      doc.text(n1, tx, ty);
-      if (n2) { ty += 4.2; doc.text(n2, tx, ty); }
-      ty += 6;
+      doc.setFontSize(9.2);
+      const nameLines = doc.splitTextToSize(cleanName(p.name || ""), maxW);
+      const linesToDraw = nameLines.slice(0, 3);
+      if (linesToDraw.length === 3 && nameLines.length > 3) {
+        linesToDraw[2] = fitText(nameLines.slice(2).join(" "), maxW, 9.2, "bold");
+      }
+      linesToDraw.forEach((ln, idx) => { doc.text(ln, tx, ty); if (idx < linesToDraw.length - 1) ty += 4.1; });
+      ty += 5.8;
 
       doc.setFont("helvetica","bold");
       doc.setFontSize(11);
@@ -1719,17 +1762,26 @@
         doc.setFontSize(7.5);
         doc.setTextColor(150,150,150);
         const oldTxt = fitText(money(p.oldPrice), Math.max(8, maxW - pw - 2), 7.5, "normal");
-        doc.text(oldTxt, tx + pw + 2, ty);
+        const oldX = tx + pw + 2;
+        doc.text(oldTxt, oldX, ty);
+        const ow = doc.getTextWidth(oldTxt);
+        doc.setDrawColor(150,150,150);
+        doc.setLineWidth(0.3);
+        doc.line(oldX, ty - 1.2, oldX + ow, ty - 1.2);
       }
-      ty += 5.2;
+      ty += 5.4;
 
-      if (p.sizes && p.sizes.length) {
-        doc.setTextColor(soft);
-        doc.setFont("helvetica","normal");
-        doc.setFontSize(6.8);
-        doc.text(fitText("Tallas: " + p.sizes.join(", "), maxW, 6.8, "normal"), tx, ty);
-        ty += 4.2;
-      }
+      const sizes = Array.isArray(p.sizes) ? p.sizes.filter(Boolean) : [];
+      const isAccessory = cleanCategory(p.category) === "ACCESORIOS";
+      const hasRealSize = sizes.some(s => /[0-9]/.test(String(s)) || /^(XS|S|M|L|XL|XXL)$/i.test(String(s).trim()));
+      let sizeText = "Talla: Única";
+      if (!isAccessory && hasRealSize) sizeText = "Tallas: " + sizes.join(", ");
+      else if (!isAccessory && sizes.length && !sizes.map(s=>String(s).toLowerCase()).includes("única") && !sizes.map(s=>String(s).toLowerCase()).includes("unica")) sizeText = "Tallas: " + sizes.join(", ");
+      doc.setTextColor(soft);
+      doc.setFont("helvetica","normal");
+      doc.setFontSize(6.8);
+      doc.text(fitText(sizeText, maxW, 6.8, "normal"), tx, ty);
+      ty += 4.3;
 
       if (p.preventa) {
         doc.setTextColor(138,109,26);
@@ -1748,17 +1800,7 @@
     }
     if (col !== 0) y += cardH + 5;
 
-    // contact footer block on last page
-    ensureSpace(20);
-    doc.setFillColor(252,248,242);
-    doc.setDrawColor(line);
-    doc.roundedRect(margin, y, pageW - margin*2, 16, 2, 2, "FD");
-    doc.setFont("helvetica", "bold"); doc.setFontSize(9); doc.setTextColor(ink);
-    doc.text("Haz tu pedido por WhatsApp", margin + 4, y + 6);
-    doc.setFont("helvetica", "normal"); doc.setFontSize(8); doc.setTextColor(soft);
-    const contact = [CONTENT.settings.whatsapp ? ("+" + CONTENT.settings.whatsapp) : "", CONTENT.settings.instagram ? ("@" + CONTENT.settings.instagram) : "", CONTENT.settings.email || ""].filter(Boolean).join("   |   ");
-    doc.text(contact || "Contáctanos para más información", margin + 4, y + 11);
-
+    // Footer CTA se agrega en todas las páginas en el bucle inferior.
     const totalPages = doc.getNumberOfPages();
     for (let i = 1; i <= totalPages; i++) {
       doc.setPage(i);
